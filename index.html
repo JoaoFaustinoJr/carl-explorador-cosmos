@@ -962,6 +962,14 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&cosmosSoun
   if(!found)throw Error('Sem fotografia');
   return {url:found.imageinfo[0].thumburl,page:found.imageinfo[0].descriptionurl||'https://commons.wikimedia.org/wiki/'+encodeURIComponent(found.title),name:found.title.replace(/^File:/,'').replace(/_/g,' ')};
  }
+ const halleyImage=document.getElementById('halley-image');
+ if(halleyImage)halleyImage.addEventListener('error',async()=>{
+  if(halleyImage.dataset.retried){halleyImage.hidden=true;return;}
+  halleyImage.dataset.retried='1';
+  try{const result=await commonsPhoto('Comet Halley 1986 photograph');halleyImage.src=result.url;halleyImage.alt=result.name;
+   const credit=document.querySelector('.halley-credit');if(credit){credit.replaceChildren(document.createTextNode('Imagem: '+result.name+' · '));const link=document.createElement('a');link.href=result.page;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Autoria e licença';credit.append(link);}
+  }catch(e){halleyImage.hidden=true;}
+ });
  const historyImages=Array.from(document.querySelectorAll('.history-media img'));
  historyImages.forEach((img,index)=>{
   const figure=img.closest('figure'),link=figure?.querySelector('figcaption a');
