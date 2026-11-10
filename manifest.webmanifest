@@ -3,7 +3,7 @@
   "short_name": "CARL",
   "description": "Observatório interativo de astronomia do Tangram Educativo",
   "lang": "pt-BR",
-  "start_url": "./#astros",
+  "start_url": "./?carl=capa-v4#astros",
   "scope": "./",
   "display": "standalone",
   "background_color": "#061122",
