@@ -1,0 +1,19 @@
+{
+  "name": "CARL — Explorador do Cosmos | Tangram Educativo",
+  "short_name": "CARL",
+  "description": "Observatório interativo de astronomia do Tangram Educativo",
+  "lang": "pt-BR",
+  "start_url": "./#astros",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#061122",
+  "theme_color": "#061122",
+  "icons": [
+    {
+      "src": "assets/carl/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
