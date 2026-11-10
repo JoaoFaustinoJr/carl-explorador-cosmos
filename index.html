@@ -272,6 +272,18 @@ main>p{margin:5px auto 7px}
 .pale-blue .pale-blue-art:before{content:"";position:absolute;inset:0;background-image:radial-gradient(#b4c6e5aa .6px,transparent .9px);background-size:37px 41px;opacity:.3}
 .pale-blue .pale-blue-art-caption{display:block;font-size:11px;color:#b6c7d8;margin-bottom:8px}
 @media(max-width:600px){.galaxy-image-context{grid-template-columns:1fr}.galaxy-image-context img{height:150px}.pale-blue .pale-blue-art{height:140px}}
+
+/* Navegação imersiva por áreas, com controle persistente e sem depender da rolagem. */
+.carl-navigation{scroll-padding-inline:16px}
+.carl-view-controls{position:fixed;bottom:max(12px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:60;display:flex;align-items:center;justify-content:space-between;gap:12px;width:min(430px,calc(100vw - 30px));padding:7px 10px;border:1px solid #e4c08055;border-radius:999px;background:#07182de8;box-shadow:0 8px 35px #0008;backdrop-filter:blur(16px)}
+.carl-view-controls button{width:38px;height:38px;flex:0 0 38px;border-radius:50%;border:1px solid #e4c08055;background:#17324c;color:#f6dfb0;font-size:21px;cursor:pointer}
+.carl-view-controls button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.carl-view-controls .view-position{min-width:0;flex:1;text-align:center;color:#e6e6e0;font-size:12px;letter-spacing:.04em}
+.carl-view-controls .view-position small{display:block;color:#a9bfd0;font-size:10px}
+main{padding-bottom:110px}
+.carl-panel .galaxy-lab,.carl-panel .night-lab,.carl-panel .solar-lab,.carl-panel .history-lab{margin-top:0}
+.carl-panel .galaxy-lab>h3,.carl-panel .night-lab>h3,.carl-panel .solar-lab>h3,.carl-panel .history-lab>h3{margin-top:3px}
+@media(max-width:600px){.carl-view-controls{bottom:max(8px,env(safe-area-inset-bottom));padding:5px 9px}.carl-view-controls button{width:34px;height:34px;flex-basis:34px}.carl-view-controls .view-position{font-size:11px}}
 </style></head>
 <body><header><strong>TANGRAM EDUCATIVO <span style="color:#91b8d7">/ CARL</span></strong><small>EXPLORADOR DO COSMOS</small></header>
 <nav class="carl-navigation" id="carl-navigation" aria-label="Áreas do observatório">
@@ -281,7 +293,7 @@ main>p{margin:5px auto 7px}
 <button type="button" data-view="galaxy" aria-selected="false">✺ Via Láctea</button>
 <button type="button" data-view="light" aria-selected="false">↗ Luz e distâncias</button>
 <button type="button" data-view="history" aria-selected="false">◷ História do céu</button>
-</nav><main><div class="carl-intro"><div class="eyebrow">CARL · OBSERVATÓRIO INTERATIVO</div><h1>O Universo em números.</h1><p>Explore o Cosmos.</p></div>
+</nav><div class="carl-view-controls" aria-label="Navegação entre áreas"><button type="button" id="view-prev" aria-label="Área anterior">‹</button><div class="view-position" aria-live="polite" id="view-position">Astros<small>1 de 6</small></div><button type="button" id="view-next" aria-label="Próxima área">›</button></div><main><div class="carl-intro"><div class="eyebrow">CARL · OBSERVATÓRIO INTERATIVO</div><h1>O Universo em números.</h1><p>Explore o Cosmos.</p></div>
 <div class="cosmos-audio-bar"><button class="cosmos-sound" id="cosmos-sound" type="button" aria-pressed="false" aria-label="Ativar som ambiente do Cosmos">♫ Som</button><span class="cosmos-audio-note">Paisagem sonora sintetizada · não é som captado no espaço</span></div><div class="stage" id="stage"><div class="stars"></div><div class="compact-art white-dwarf" aria-hidden="true"><div class="dwarf-aura"></div><div class="dwarf-star"></div></div><div class="compact-art comet" aria-hidden="true"><div class="comet-tail"></div><div class="comet-tail dust"></div><div class="comet-coma"></div><div class="comet-core"></div></div><div class="pulsar-art" aria-hidden="true"><div class="pulsar-halo"></div><div class="pulsar-field"></div><div class="pulsar-field second"></div><div class="pulsar-beam up"></div><div class="pulsar-beam down"></div><div class="pulsar-core"></div></div><img id="hero" class="hero-image" src="assets/carl/terra.png" alt="Ilustração artística da Terra"><span class="stage-tip">Toque na imagem para ampliar · Deslize para mudar</span></div>
 <div id="image-credit" class="image-credit" aria-live="polite"></div><div class="filters" id="filters" aria-label="Categorias de objetos"></div>
 <div class="carousel"><button id="prev" class="arrow" aria-label="Anterior">‹</button><nav id="carousel" aria-label="Carrossel de corpos celestes"></nav><button id="next" class="arrow" aria-label="Próximo">›</button></div>
@@ -622,10 +634,19 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&cosmosSoun
   for(const [key,panel] of Object.entries(panels))panel.hidden=key!==id;
   intro.hidden=id!=='astros';
   nav.querySelectorAll('button').forEach(button=>button.setAttribute('aria-selected',String(button.dataset.view===id)));
+  const current=groups.findIndex(g=>g[0]===id),counter=document.getElementById('view-position');
+  counter.replaceChildren(document.createTextNode(groups[current][1]));const small=document.createElement('small');small.textContent=(current+1)+' de '+groups.length;counter.append(small);
+  const activeButton=nav.querySelector('button[data-view="'+id+'"]');if(activeButton)activeButton.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+
   if(updateHistory)history.replaceState(null,'','#'+id);
   window.scrollTo({top:0,behavior:'auto'});
  }
  nav.addEventListener('click',e=>{const b=e.target.closest('button[data-view]');if(b)show(b.dataset.view)});
+ function step(delta){const current=groups.findIndex(g=>g[0]===document.querySelector('.carl-navigation [aria-selected="true"]').dataset.view);show(groups[(current+delta+groups.length)%groups.length][0])}
+ document.getElementById('view-prev').addEventListener('click',()=>step(-1));
+ document.getElementById('view-next').addEventListener('click',()=>step(1));
+ document.addEventListener('keydown',e=>{if(e.altKey&&!e.ctrlKey&&!e.metaKey&&e.key==='ArrowRight'){e.preventDefault();step(1)}else if(e.altKey&&!e.ctrlKey&&!e.metaKey&&e.key==='ArrowLeft'){e.preventDefault();step(-1)}});
+
  window.addEventListener('hashchange',()=>show(location.hash.slice(1),false));
  main.insertBefore(intro,main.firstChild);
  intro.after(sound);
