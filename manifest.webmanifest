@@ -10,9 +10,9 @@
   "theme_color": "#061122",
   "icons": [
     {
-      "src": "assets/carl/icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "assets/carl/CARL_Explorador_Espacial_icone.png",
+      "sizes": "512x512",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]
