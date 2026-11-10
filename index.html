@@ -697,22 +697,22 @@ async function toggleCosmosSound(){
    if(!cosmosAudio){
     const ctx=new AudioContextType(),master=ctx.createGain();
     master.gain.value=0;master.connect(ctx.destination);
-    const voices=[55,82.41,110,164.81];
+    const voices=[110,164.81,220,329.63];
     const oscillators=voices.map((freq,i)=>{
       const osc=ctx.createOscillator(),g=ctx.createGain(),filter=ctx.createBiquadFilter();
       osc.type=i%2?'sine':'triangle';osc.frequency.value=freq;
-      filter.type='lowpass';filter.frequency.value=350;
-      g.gain.value=[.12,.07,.045,.025][i];
+      filter.type='lowpass';filter.frequency.value=1100;
+      g.gain.value=[.19,.13,.10,.075][i];
       osc.connect(filter);filter.connect(g);g.connect(master);osc.start();return osc;
     });
     const lfo=ctx.createOscillator(),lfoGain=ctx.createGain();
-    lfo.frequency.value=.075;lfoGain.gain.value=.025;
+    lfo.frequency.value=.075;lfoGain.gain.value=.035;
     lfo.connect(lfoGain);lfoGain.connect(master.gain);lfo.start();
     cosmosAudio={ctx,master,oscillators,lfo};
    }
    await cosmosAudio.ctx.resume();
    cosmosAudio.master.gain.cancelScheduledValues(cosmosAudio.ctx.currentTime);
-   cosmosAudio.master.gain.setTargetAtTime(.13,cosmosAudio.ctx.currentTime,1.5);
+   cosmosAudio.master.gain.setTargetAtTime(.48,cosmosAudio.ctx.currentTime,.35);
    cosmosSoundOn=true;button.setAttribute('aria-pressed','true');button.textContent='♫ Som ligado';
   }catch(e){button.textContent='Áudio indisponível neste navegador';button.disabled=true}
  }else{
@@ -909,6 +909,45 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&cosmosSoun
   perseverance:['18 de fevereiro de 2021','Perseverance pousa na cratera Jezero, em Marte.'],
   chandrayaan:['23 de agosto de 2023','Chandrayaan-3 pousa na região polar sul da Lua.']
  };
+ /* Consulta o catálogo Wikimedia Commons em tempo real para substituir
+    nomes de arquivos que não existem. Mantém a página de origem visível. */
+ const historyQueries=[
+  'Babylonian astronomical tablet museum',
+  'Dendera zodiac relief',
+  'Milky Way astrophotography',
+  'Hokulea canoe',
+  'Islamic astrolabe museum',
+  'mariners astrolabe museum',
+  'Galileo moon drawings',
+  'Earthrise Apollo 8 NASA'
+ ];
+ const missionQueries={
+  sputnik:'Sputnik 1 replica museum',gagarin:'Yuri Gagarin 1961',
+  apollo11:'Apollo 11 Buzz Aldrin moon NASA',apollo8:'Earthrise Apollo 8 NASA',
+  shuttle:'STS-1 Columbia launch NASA',voyager:'Voyager spacecraft NASA JPL',
+  iss:'International Space Station NASA photograph'
+ };
+ async function commonsPhoto(query){
+  const api='https://commons.wikimedia.org/w/api.php?origin=*&action=query&format=json&generator=search&gsrnamespace=6&gsrlimit=8&gsrsearch='+encodeURIComponent('filetype:bitmap '+query)+'&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=900';
+  const res=await fetch(api,{mode:'cors'});if(!res.ok)throw Error('Commons API');
+  const data=await res.json(),pages=Object.values(data.query?.pages||{});
+  const found=pages.find(p=>p.imageinfo?.[0]?.thumburl&&/\.(jpg|jpeg|png|webp)$/i.test(p.title));
+  if(!found)throw Error('Sem fotografia');
+  return {url:found.imageinfo[0].thumburl,page:found.imageinfo[0].descriptionurl||'https://commons.wikimedia.org/wiki/'+encodeURIComponent(found.title),name:found.title.replace(/^File:/,'').replace(/_/g,' ')};
+ }
+ const historyImages=Array.from(document.querySelectorAll('.history-media img'));
+ historyImages.forEach((img,index)=>{
+  const figure=img.closest('figure'),link=figure?.querySelector('figcaption a');
+  if(!figure)return;
+  img.addEventListener('error',async()=>{
+   if(img.dataset.retried){figure.hidden=true;return;}
+   img.dataset.retried='1';
+   try{const result=await commonsPhoto(historyQueries[index]);img.src=result.url;img.alt=result.name;
+    if(link){link.href=result.page;link.textContent='Ver arquivo e licença';}
+    const caption=figure.querySelector('figcaption');if(caption)caption.firstChild.textContent=result.name+' · ';
+   }catch(e){figure.hidden=true;}
+  });
+ });
  document.querySelectorAll('.history-media img').forEach(img=>{
   img.addEventListener('error',()=>{const figure=img.closest('figure');if(figure)figure.hidden=true;});
  });
@@ -952,7 +991,16 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&cosmosSoun
  const caption=document.createElement('figcaption'),creditLink=document.createElement('a');creditLink.target='_blank';creditLink.rel='noopener noreferrer';
  photoBox.append(photo,caption,creditLink);
  document.getElementById('mission-detail').insertBefore(photoBox,document.getElementById('mission-summary'));
- photo.addEventListener('error',()=>{photoBox.hidden=true;photo.removeAttribute('src')});
+ photo.addEventListener('error',async()=>{
+  const key=photo.dataset.mission;
+  if(!key||photo.dataset.retried==='1'){photoBox.hidden=true;photo.removeAttribute('src');return;}
+  photo.dataset.retried='1';
+  try{const result=await commonsPhoto(missionQueries[key]||key);
+   if(photo.dataset.mission!==key)return;
+   photo.src=result.url;photo.alt=result.name;creditLink.href=result.page;
+   caption.textContent='Arquivo Wikimedia Commons · '+result.name+' · consultar autoria e licença na fonte';
+  }catch(e){photoBox.hidden=true;photo.removeAttribute('src');}
+ });
  const missionPager=document.createElement('div');missionPager.className='mission-pager';
  const prevMission=document.createElement('button'),nextMission=document.createElement('button'),missionPosition=document.createElement('span');
  prevMission.type='button';nextMission.type='button';prevMission.textContent='‹ Anterior';nextMission.textContent='Próxima ›';
@@ -979,7 +1027,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&cosmosSoun
   const record=missionArchives[m.id];archive.hidden=!record;
   if(record){archiveTitle.textContent=record.title;archiveType.textContent=record.type+' · '+record.credit;archiveLink.href=record.url;}
   const media=missionMedia[m.id];photoBox.hidden=!media;
-  if(media){photo.alt=media.kind+' — '+m.name;caption.textContent=media.kind+' · '+media.credit;creditLink.textContent='Ver fotografia, autoria e licença';creditLink.href=media.page;photo.src=media.url;}else{photo.removeAttribute('src');}
+  if(media){photo.dataset.mission=m.id;photo.dataset.retried='0';photo.alt=media.kind+' — '+m.name;caption.textContent=media.kind+' · '+media.credit;creditLink.textContent='Ver fotografia, autoria e licença';creditLink.href=media.page;photo.src=media.url;}else{photo.removeAttribute('src');}
 
  }
  function render(era){
