@@ -909,6 +909,9 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&cosmosSoun
   perseverance:['18 de fevereiro de 2021','Perseverance pousa na cratera Jezero, em Marte.'],
   chandrayaan:['23 de agosto de 2023','Chandrayaan-3 pousa na região polar sul da Lua.']
  };
+ document.querySelectorAll('.history-media img').forEach(img=>{
+  img.addEventListener('error',()=>{const figure=img.closest('figure');if(figure)figure.hidden=true;});
+ });
  const missionSupplementalMedia={
   apollo8:{url:'https://commons.wikimedia.org/wiki/Special:FilePath/Earthrise.jpg?width=900',credit:'NASA · Apollo 8 · William Anders (1968)',page:'https://www.nasa.gov/image-article/earthrise/',kind:'Fotografia histórica da Terra'},
   shuttle:{url:'https://commons.wikimedia.org/wiki/Special:FilePath/STS-1%20launch.jpg?width=900',credit:'NASA · STS-1, Columbia (1981)',page:'https://www.nasa.gov/mission/sts-1/',kind:'Fotografia histórica do lançamento'},
