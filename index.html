@@ -502,9 +502,15 @@ footer small{display:block;color:#a6bfd0;font-style:italic}
 .carl-site-header>small{text-align:right;max-width:150px;line-height:1.35;letter-spacing:.14em}
 @media(max-width:600px){.carl-site-header{padding:16px 17px;gap:8px}.carl-header-identity>strong{font-size:clamp(16px,4vw,21px)}.carl-header-author{font-size:11px}.carl-site-header>small{font-size:10px;max-width:110px}}
 .carl-app-actions{display:flex;justify-content:center;align-items:center;gap:9px;flex-wrap:wrap;padding:10px 12px 4px}.carl-app-actions button{border:1px solid #d2b77d88;color:#f4d7a0;background:#102a42;padding:9px 15px;font-size:12px}.carl-app-actions #carl-install{background:#b8924d;color:#071b2d;font-weight:700}.carl-app-actions button[hidden]{display:none}.carl-app-actions #carl-install-hint{flex-basis:100%;text-align:center;font-size:11px;color:#b8d2df}.carl-app-actions #carl-install-hint:empty{display:none}
+
+/* Ações secundárias discretas, apenas no rodapé. */
+footer .carl-app-actions{padding:2px 0 15px;justify-content:flex-start;gap:8px}
+footer .carl-app-actions button,footer .carl-app-actions #carl-install{font:normal 11px/1.3 system-ui,sans-serif;letter-spacing:.02em;color:#b6c8d5;background:transparent;border:1px solid #91a7b44d;border-radius:999px;padding:7px 12px;box-shadow:none;opacity:.82}
+footer .carl-app-actions button:hover,footer .carl-app-actions button:focus-visible{opacity:1;color:#e9d3a8;border-color:#d8bb8188}
+footer .carl-app-actions #carl-install-hint{text-align:left;color:#b6c8d5}
 </style></head>
 <body><header class="carl-site-header"><div class="carl-header-identity"><strong>TANGRAM EDUCATIVO <span style="color:#91b8d7">/ CARL</span></strong><span class="carl-header-author">Professor João Faustino Junior</span></div><small>EXPLORADOR DO COSMOS</small></header>
-<div class="carl-app-actions"><button type="button" id="carl-install" hidden>↓ Instalar CARL</button><button type="button" id="carl-share">↗ Compartilhar</button><span id="carl-install-hint" role="status" aria-live="polite"></span></div><nav class="carl-navigation" id="carl-navigation" aria-label="Áreas do observatório">
+<nav class="carl-navigation" id="carl-navigation" aria-label="Áreas do observatório">
 <button type="button" data-view="astros" aria-selected="true">✦ Astros</button>
 <button type="button" data-view="solar" aria-selected="false">☀ Sistema Solar</button>
 <button type="button" data-view="night" aria-selected="false">✧ Céu noturno</button>
@@ -538,7 +544,7 @@ footer small{display:block;color:#a6bfd0;font-style:italic}
 <a id="mission-source" href="https://www.nasa.gov/history/" target="_blank" rel="noopener noreferrer">Conhecer a fonte histórica</a>
 </article>
 <p class="mission-disclaimer">Datas e acontecimentos históricos resumidos para fins educativos. Os registros são incorporados gradualmente, com identificação de autoria, data e licença. Fotografias de réplicas são identificadas como tal.</p>
-</section></main><footer><strong>CARL · Tangram Educativo</strong> — Observatório educacional independente. Fotografias e imagens científicas com créditos individuais; ilustrações identificadas. Distâncias e tamanhos nem sempre estão em escala.<div class="portal-footer-links"><a href="#credits" id="open-credits">Créditos e fontes</a><a href="https://github.com/JoaoFaustinoJr/carl-explorador-cosmos" target="_blank" rel="noopener noreferrer">Projeto e versão</a></div><small>Com carinho: JFJr</small></footer>
+</section></main><footer><div class="carl-app-actions"><button type="button" id="carl-install" hidden>↓ Instalar</button><button type="button" id="carl-share">↗ Compartilhar</button><span id="carl-install-hint" role="status" aria-live="polite"></span></div><strong>CARL · Tangram Educativo</strong> — Observatório educacional independente. Fotografias e imagens científicas com créditos individuais; ilustrações identificadas. Distâncias e tamanhos nem sempre estão em escala.<div class="portal-footer-links"><a href="#credits" id="open-credits">Créditos e fontes</a><a href="https://github.com/JoaoFaustinoJr/carl-explorador-cosmos" target="_blank" rel="noopener noreferrer">Projeto e versão</a></div><small>Com carinho: JFJr</small></footer>
 <dialog id="credits-dialog" aria-labelledby="credits-heading"><div class="credits-header"><h2 id="credits-heading">Créditos e fontes</h2><button id="close-credits" type="button" aria-label="Fechar créditos">×</button></div><p>O CARL é uma experiência educativa do Tangram Educativo. Não é um produto oficial da NASA, ESA ou de outras instituições citadas.</p><div id="credits-list"></div><p>As fotografias pertencem aos respectivos autores e instituições, conforme as condições indicadas nas páginas de origem. Ilustrações e modelos interativos são representações didáticas.</p></dialog>
 <script>
 'use strict';
