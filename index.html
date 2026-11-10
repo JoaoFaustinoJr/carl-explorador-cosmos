@@ -976,13 +976,20 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&cosmosSoun
   'Earthrise Apollo 8 NASA'
  ];
  const missionQueries={
-  sputnik:'Sputnik 1 replica museum',gagarin:'Yuri Gagarin 1961',
-  apollo11:'Apollo 11 Buzz Aldrin moon NASA',apollo8:'Earthrise Apollo 8 NASA',
-  shuttle:'STS-1 Columbia launch NASA',voyager:'Voyager spacecraft NASA JPL',
-  giotto:'Giotto spacecraft Halley comet 1986 ESA',
-  iss:'International Space Station NASA photograph'
+  sputnik:'Sputnik 1 satellite replica museum',laika:'Laika dog Sputnik 2 Soviet space',gagarin:'Yuri Gagarin 1961 portrait',
+  tereshkova:'Valentina Tereshkova Vostok 6 cosmonaut',apollo8:'Apollo 8 Earthrise NASA',apollo11:'Apollo 11 Buzz Aldrin moon NASA',
+  salyut:'Salyut 1 Soviet space station',voyager:'Voyager spacecraft NASA JPL',shuttle:'STS-1 Columbia shuttle launch NASA',
+  giotto:'Giotto ESA Halley comet spacecraft',mir:'Mir space station NASA photograph',
+  iss:'International Space Station NASA photograph',rosetta:'Rosetta spacecraft comet 67P ESA',
+  change:'Chang e 4 Yutu 2 lunar lander CNSA',perseverance:'Perseverance rover Mars NASA',
+  chandrayaan:'Chandrayaan 3 Vikram lander ISRO'
  };
- async function commonsPhoto(query){
+ const missionPhotoCache=new Map();
+ function findMissionPhoto(id){
+  if(!missionPhotoCache.has(id))missionPhotoCache.set(id,commonsPhoto(missionQueries[id]||id));
+  return missionPhotoCache.get(id);
+ }
+  async function commonsPhoto(query){
   const api='https://commons.wikimedia.org/w/api.php?origin=*&action=query&format=json&generator=search&gsrnamespace=6&gsrlimit=8&gsrsearch='+encodeURIComponent('filetype:bitmap '+query)+'&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=900';
   const res=await fetch(api,{mode:'cors'});if(!res.ok)throw Error('Commons API');
   const data=await res.json(),pages=Object.values(data.query?.pages||{});
@@ -1070,10 +1077,10 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&cosmosSoun
   const key=photo.dataset.mission;
   if(!key||photo.dataset.retried==='1'){photoBox.hidden=true;missionGalleryNote.hidden=false;photo.removeAttribute('src');return;}
   photo.dataset.retried='1';
-  try{const result=await commonsPhoto(missionQueries[key]||key);
+  try{const result=await findMissionPhoto(key);
    if(photo.dataset.mission!==key)return;
    photo.src=result.url;photo.alt=result.name;creditLink.href=result.page;
-   caption.textContent='Arquivo Wikimedia Commons · '+result.name+(result.author?' · '+result.author:'')+(result.license?' · '+result.license:'')+' · detalhes na fonte';
+   caption.textContent='Imagem de arquivo relacionada · '+result.name+(result.author?' · '+result.author:'')+(result.license?' · '+result.license:'')+' · detalhes na fonte';
   }catch(e){photoBox.hidden=true;missionGalleryNote.hidden=false;photo.removeAttribute('src');}
  });
  const missionPager=document.createElement('div');missionPager.className='mission-pager';
@@ -1101,8 +1108,19 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&cosmosSoun
   if(milestoneData){milestoneDate.textContent=milestoneData[0];milestoneText.textContent=milestoneData[1];}
   const record=missionArchives[m.id];archive.hidden=!record;
   if(record){archiveTitle.textContent=record.title;archiveType.textContent=record.type+' · '+record.credit;archiveLink.href=record.url;}
-  const media=missionMedia[m.id];photoBox.hidden=!media;missionGalleryNote.hidden=!!media;
-  if(media){photo.dataset.mission=m.id;photo.dataset.retried='0';photo.alt=media.kind+' — '+m.name;caption.textContent=media.kind+' · '+media.credit;creditLink.textContent='Ver fotografia, autoria e licença';creditLink.href=media.page;photo.src=media.url;}else{photo.removeAttribute('src');}
+  const media=missionMedia[m.id];photoBox.hidden=false;missionGalleryNote.hidden=true;
+  photo.dataset.mission=m.id;photo.dataset.retried='0';
+  if(media){photo.alt=media.kind+' — '+m.name;caption.textContent=media.kind+' · '+media.credit;creditLink.textContent='Ver fotografia, autoria e licença';creditLink.href=media.page;photo.src=media.url;}
+  else{
+   photo.removeAttribute('src');photo.alt='Imagem de arquivo relacionada à missão '+m.name;
+   caption.textContent='Consultando arquivo histórico · origem e licença serão indicadas após o carregamento';
+   creditLink.textContent='Consultar origem e licença';creditLink.removeAttribute('href');
+   findMissionPhoto(m.id).then(result=>{
+    if(photo.dataset.mission!==m.id)return;
+    photo.src=result.url;photo.alt=result.name;creditLink.href=result.page;
+    caption.textContent='Imagem de arquivo relacionada · '+result.name+(result.author?' · '+result.author:'')+(result.license?' · '+result.license:'');
+   }).catch(()=>{if(photo.dataset.mission===m.id){photoBox.hidden=true;missionGalleryNote.hidden=false;}});
+  }
 
  }
  function render(era){
@@ -1113,12 +1131,19 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&cosmosSoun
    const media=missionMedia[m.id];
    const visual=document.createElement('span');visual.className='mission-card-visual';
    const symbol=document.createElement('span');symbol.className='mission-icon';symbol.textContent=m.icon;visual.append(symbol);
-   if(media){
-    const thumbnail=document.createElement('img');thumbnail.className='mission-thumbnail';thumbnail.src=media.url;thumbnail.alt='';thumbnail.loading='lazy';thumbnail.decoding='async';
-    thumbnail.addEventListener('load',()=>{if(thumbnail.naturalWidth>0)symbol.hidden=true;});
-    thumbnail.addEventListener('error',()=>{thumbnail.remove();symbol.hidden=false;});
-    visual.append(thumbnail);
-   }
+   const thumbnail=document.createElement('img');thumbnail.className='mission-thumbnail';thumbnail.alt='';thumbnail.loading='lazy';thumbnail.decoding='async';
+   const useArchivePhoto=async()=>{
+    try{
+     const result=await findMissionPhoto(m.id);
+     if(!b.isConnected)return;
+     thumbnail.src=result.url;thumbnail.title='Arquivo relacionado: '+result.name+' — conferir créditos na ficha';
+    }catch(e){thumbnail.remove();symbol.hidden=false;}
+   };
+   thumbnail.addEventListener('load',()=>{if(thumbnail.naturalWidth>0)symbol.hidden=true;});
+   thumbnail.addEventListener('error',()=>{if(media&&!thumbnail.dataset.fallback){thumbnail.dataset.fallback='1';useArchivePhoto();}else{thumbnail.remove();symbol.hidden=false;}});
+   visual.append(thumbnail);
+   if(media)thumbnail.src=media.url;
+   else useArchivePhoto();
    b.append(visual);
    const year=document.createElement('small');year.textContent=m.year;
    const title=document.createElement('strong');title.textContent=m.name;
