@@ -404,6 +404,11 @@ footer small{display:block;color:#a6bfd0;font-style:italic}
 .mission-archive strong{display:block;font:normal 20px Georgia,serif;color:#f8e3bd;margin:7px 0}
 .mission-archive p{font-size:12px;margin:6px 0 12px}
 .mission-archive a{color:#f1d193;font-size:13px;text-underline-offset:3px}
+
+.mission-pager{display:flex;align-items:center;justify-content:space-between;gap:8px;border-top:1px solid #c7ac7850;margin-top:20px;padding-top:15px;color:#c4d6e3;font-size:12px}
+.mission-pager button{background:#15354a;color:#f5dfb4;border:1px solid #d5b57777;border-radius:999px;padding:9px 13px;cursor:pointer;font-size:12px}
+.mission-pager button:disabled{opacity:.35;cursor:default}
+.mission-detail{margin-bottom:80px}
 </style></head>
 <body><header><strong>TANGRAM EDUCATIVO <span style="color:#91b8d7">/ CARL</span></strong><small>EXPLORADOR DO COSMOS</small></header>
 <nav class="carl-navigation" id="carl-navigation" aria-label="Áreas do observatório">
@@ -856,6 +861,15 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&cosmosSoun
   gagarin:{url:'https://commons.wikimedia.org/wiki/Special:FilePath/Yuri%20Gagarin%20(1961).jpg?width=750',credit:'Arto Jousi · Museu Finlandês de Fotografia (1961)',page:'https://commons.wikimedia.org/wiki/File:Yuri_Gagarin_(1961).jpg',kind:'Fotografia histórica · licença na fonte'}
  };
  const missionArchives={
+  tereshkova:{title:'Valentina Tereshkova · Vostok 6',type:'Arquivo histórico de voos humanos',url:'https://www.esa.int/About_Us/ESA_history',credit:'ESA · História espacial'},
+  gagarin:{title:'Yuri Gagarin · Vostok 1',type:'Arquivo histórico de voos humanos',url:'https://www.esa.int/About_Us/ESA_history',credit:'ESA · História espacial'},
+  sputnik:{title:'Sputnik 1 · início da era espacial',type:'Arquivo histórico e contexto',url:'https://www.nasa.gov/history/',credit:'NASA · História'},
+  laika:{title:'Sputnik 2 · missão de Laika',type:'Arquivo histórico e contexto',url:'https://www.esa.int/About_Us/ESA_history',credit:'ESA · História espacial'},
+  mir:{title:'Estação Mir · arquivo histórico',type:'Arquivo histórico',url:'https://www.esa.int/About_Us/ESA_history',credit:'ESA'},
+  salyut:{title:'Salyut 1 · primeira estação orbital',type:'Arquivo histórico',url:'https://www.esa.int/About_Us/ESA_history',credit:'ESA'},
+  change:{title:'Chang’e 4 · exploração da face oculta lunar',type:'Página institucional da agência',url:'https://www.cnsa.gov.cn/english/',credit:'CNSA · China'},
+  chandrayaan:{title:'Chandrayaan-3 · exploração lunar',type:'Página oficial da missão',url:'https://www.isro.gov.in/Chandrayaan3_Details.html',credit:'ISRO · Índia'},
+
   shuttle:{title:'Lançamento do Columbia · STS-1 (1981)',type:'Fotografia histórica NASA',url:'https://www.nasa.gov/image-article/sts-1-columbias-maiden-launch-2/',credit:'NASA · EC81-15515 / S81-30462'},
   iss:{title:'ISS fotografada pela tripulação Crew-2 (2021)',type:'Fotografia em órbita',url:'https://www.nasa.gov/international-space-station/space-station-gallery/',credit:'ESA / NASA · Thomas Pesquet'},
   voyager:{title:'Voyager: construção, testes e imagens de missão',type:'Acervo fotográfico NASA/JPL',url:'https://science.nasa.gov/gallery/images-of-voyager/',credit:'NASA / JPL-Caltech'},
@@ -875,8 +889,18 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&cosmosSoun
  photoBox.append(photo,caption,creditLink);
  document.getElementById('mission-detail').insertBefore(photoBox,document.getElementById('mission-summary'));
  photo.addEventListener('error',()=>{photoBox.hidden=true;photo.removeAttribute('src')});
+ const missionPager=document.createElement('div');missionPager.className='mission-pager';
+ const prevMission=document.createElement('button'),nextMission=document.createElement('button'),missionPosition=document.createElement('span');
+ prevMission.type='button';nextMission.type='button';prevMission.textContent='‹ Anterior';nextMission.textContent='Próxima ›';
+ missionPager.append(prevMission,missionPosition,nextMission);
+ document.getElementById('mission-detail').append(missionPager);
+ let currentMissions=missions,currentMissionId=missions[0].id;
  const timeline=document.getElementById('mission-timeline'),filterButtons=document.querySelectorAll('.mission-filters button');
  function select(m){
+  currentMissionId=m.id;
+  const pos=currentMissions.findIndex(x=>x.id===m.id);
+  missionPosition.textContent=(pos+1)+' de '+currentMissions.length;
+  prevMission.disabled=pos<=0;nextMission.disabled=pos>=currentMissions.length-1;
   timeline.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.id===m.id)));
   document.getElementById('mission-date').textContent=m.year;
   document.getElementById('mission-country').textContent=m.nation;
@@ -893,7 +917,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&cosmosSoun
  }
  function render(era){
   timeline.replaceChildren();
-  const subset=missions.filter(m=>era==='all'||m.era===era);
+  const subset=missions.filter(m=>era==='all'||m.era===era);currentMissions=subset;
   for(const m of subset){
    const b=document.createElement('button');b.type='button';b.dataset.id=m.id;b.setAttribute('aria-pressed','false');
    const media=missionMedia[m.id];
@@ -906,6 +930,14 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&cosmosSoun
   }
   if(subset.length)select(subset[0]);
  }
+ function navigateMission(step){
+  const index=currentMissions.findIndex(m=>m.id===currentMissionId),next=currentMissions[index+step];
+  if(!next)return;select(next);
+  const target=Array.from(timeline.children).find(b=>b.dataset.id===next.id);
+  if(target)target.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+ }
+ prevMission.addEventListener('click',()=>navigateMission(-1));
+ nextMission.addEventListener('click',()=>navigateMission(1));
  filterButtons.forEach(b=>b.addEventListener('click',()=>{filterButtons.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));render(b.dataset.era)}));
  render('all');
 })();
