@@ -397,6 +397,13 @@ footer small{display:block;color:#a6bfd0;font-style:italic}
 .mission-thumbnail{display:block;width:calc(100% + 26px);height:85px;object-fit:cover;object-position:center 30%;margin:-17px -13px 8px;border-radius:15px 15px 4px 4px;filter:saturate(.9)}
 .mission-timeline button:has(.mission-thumbnail){padding-top:17px;overflow:hidden}
 .mission-timeline button:has(.mission-thumbnail) strong{font-size:19px}
+
+.mission-archive{margin:15px 0 5px;padding:15px;border:1px solid #d7b57766;border-radius:14px;background:linear-gradient(125deg,#27445d77,#071a2dcc)}
+.mission-archive[hidden]{display:none}
+.mission-archive small{display:block;color:#e4c080;font-size:10px;letter-spacing:.13em;font-weight:700}
+.mission-archive strong{display:block;font:normal 20px Georgia,serif;color:#f8e3bd;margin:7px 0}
+.mission-archive p{font-size:12px;margin:6px 0 12px}
+.mission-archive a{color:#f1d193;font-size:13px;text-underline-offset:3px}
 </style></head>
 <body><header><strong>TANGRAM EDUCATIVO <span style="color:#91b8d7">/ CARL</span></strong><small>EXPLORADOR DO COSMOS</small></header>
 <nav class="carl-navigation" id="carl-navigation" aria-label="Áreas do observatório">
@@ -848,6 +855,20 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&cosmosSoun
   apollo11:{url:'https://commons.wikimedia.org/wiki/Special:FilePath/AS11-40-5903%20-%20Buzz%20Aldrin%20by%20Neil%20Armstrong%20(full%20frame).jpg?width=900',credit:'NASA · Neil Armstrong · AS11-40-5903 (1969)',page:'https://science.nasa.gov/resource/apollo-11-buzz-aldrin/',kind:'Fotografia original'},
   gagarin:{url:'https://commons.wikimedia.org/wiki/Special:FilePath/Yuri%20Gagarin%20(1961).jpg?width=750',credit:'Arto Jousi · Museu Finlandês de Fotografia (1961)',page:'https://commons.wikimedia.org/wiki/File:Yuri_Gagarin_(1961).jpg',kind:'Fotografia histórica · licença na fonte'}
  };
+ const missionArchives={
+  shuttle:{title:'Lançamento do Columbia · STS-1 (1981)',type:'Fotografia histórica NASA',url:'https://www.nasa.gov/image-article/sts-1-columbias-maiden-launch-2/',credit:'NASA · EC81-15515 / S81-30462'},
+  iss:{title:'ISS fotografada pela tripulação Crew-2 (2021)',type:'Fotografia em órbita',url:'https://www.nasa.gov/international-space-station/space-station-gallery/',credit:'ESA / NASA · Thomas Pesquet'},
+  voyager:{title:'Voyager: construção, testes e imagens de missão',type:'Acervo fotográfico NASA/JPL',url:'https://science.nasa.gov/gallery/images-of-voyager/',credit:'NASA / JPL-Caltech'},
+  apollo8:{title:'Apollo 8 · primeira órbita tripulada da Lua',type:'Arquivo histórico NASA',url:'https://www.nasa.gov/mission/apollo-8/',credit:'NASA'},
+  perseverance:{title:'Perseverance · fotografias de Marte',type:'Arquivo de missão NASA',url:'https://science.nasa.gov/mission/mars-2020-perseverance/',credit:'NASA / JPL-Caltech'},
+  rosetta:{title:'Rosetta · arquivo científico ESA',type:'Arquivo da missão',url:'https://www.esa.int/Science_Exploration/Space_Science/Rosetta',credit:'ESA'}
+ };
+ const archive=document.createElement('aside');archive.className='mission-archive';archive.hidden=true;
+ const archiveTag=document.createElement('small');archiveTag.textContent='ACERVO DOCUMENTAL';
+ const archiveTitle=document.createElement('strong'),archiveType=document.createElement('p'),archiveLink=document.createElement('a');
+ archiveLink.target='_blank';archiveLink.rel='noopener noreferrer';archiveLink.textContent='Abrir fotografias e registros históricos ↗';
+ archive.append(archiveTag,archiveTitle,archiveType,archiveLink);
+ document.getElementById('mission-detail').append(archive);
  const photoBox=document.createElement('figure');photoBox.className='mission-photo';photoBox.hidden=true;
  const photo=document.createElement('img');photo.loading='lazy';photo.alt='';
  const caption=document.createElement('figcaption'),creditLink=document.createElement('a');creditLink.target='_blank';creditLink.rel='noopener noreferrer';
@@ -864,6 +885,8 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&cosmosSoun
   document.getElementById('mission-result').textContent=m.result;
   document.getElementById('mission-question').textContent=m.question;
   document.getElementById('mission-source').href=m.source;
+  const record=missionArchives[m.id];archive.hidden=!record;
+  if(record){archiveTitle.textContent=record.title;archiveType.textContent=record.type+' · '+record.credit;archiveLink.href=record.url;}
   const media=missionMedia[m.id];photoBox.hidden=!media;
   if(media){photo.alt=media.kind+' — '+m.name;caption.textContent=media.kind+' · '+media.credit;creditLink.textContent='Ver fotografia, autoria e licença';creditLink.href=media.page;photo.src=media.url;}else{photo.removeAttribute('src');}
 
