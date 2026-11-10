@@ -1290,46 +1290,45 @@ if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serv
 if(!('onbeforeinstallprompt'in window)){install.hidden=false;install.textContent='↓ Como instalar';}
 })();
 </script><script>(()=>{const cover=document.getElementById('carl-cinematic'),enter=document.getElementById('cin-enter'),replay=document.getElementById('carl-replay'),narrate=document.getElementById('cin-narrate'),audio=document.getElementById('carl-intro-audio');if(!cover||!enter)return;let timer=null;function close(){clearTimeout(timer);if(audio){audio.pause();audio.currentTime=0}cover.hidden=true;document.body.style.overflow='';if(replay&&document.activeElement===enter)replay.focus({preventScroll:true})}function open(){clearTimeout(timer);cover.hidden=false;document.body.style.overflow='hidden';enter.focus({preventScroll:true});if(narrate){narrate.hidden=false;narrate.textContent='▶ Ouvir narração'}timer=setTimeout(close,11000);if(audio){audio.currentTime=0;audio.play().then(()=>{if(narrate)narrate.textContent='♫ Narração em andamento'}).catch(()=>{if(narrate)narrate.textContent='▶ Ouvir narração'})}}narrate?.addEventListener('click',()=>{if(!audio)return;audio.play().then(()=>{narrate.textContent='♫ Narração em andamento'}).catch(()=>{narrate.textContent='Áudio indisponível'})});audio?.addEventListener('ended',close);enter.addEventListener('click',close);replay?.addEventListener('click',open);cover.addEventListener('keydown',e=>{if(e.key==='Escape')close()});open()})();</script><script>
-/* CARL — Sinfonia do Cosmos: composição procedural original, sem samples externos.
-   A reprodução só começa por ação do visitante; sem áudio automático. */
+/* Sinfonia do Cosmos — trilha ORIGINAL sintetizada localmente, ativada por gesto. */
 (()=>{'use strict';
 const button=document.getElementById('carl-music-toggle');
-if(!button)return;
 const AC=window.AudioContext||window.webkitAudioContext;
-if(!AC){button.hidden=true;return}
-let ctx=null,master=null,voices=[],pulse=null,playing=false,step=0;
-const chords=[[110,164.81,220,329.63],[98,146.83,196,293.66],[87.31,130.81,174.61,261.63],[82.41,123.47,164.81,246.94]];
-function setChord(){
- if(!ctx||!playing)return;
- const now=ctx.currentTime,notes=chords[step%chords.length];step++;
- voices.forEach((v,i)=>{v.osc.frequency.cancelScheduledValues(now);v.osc.frequency.setTargetAtTime(notes[i]*(i===3?2:1),now,2.7)});
-}
-function init(){
+if(!button||!AC){if(button)button.hidden=true;return}
+let ctx,master,pad=[],timer=null,playing=false,step=0,melodyStep=0;
+const chords=[[130.81,196,261.63,392],[110,164.81,220,329.63],[98,146.83,196,293.66],[116.54,174.61,233.08,349.23]];
+const melody=[0,2,3,2,1,2,3,4,3,2,1,0,2,1,0,-1];
+function setup(){
  ctx=new AC();master=ctx.createGain();master.gain.value=0;master.connect(ctx.destination);
- const toneTypes=['sine','sine','triangle','sine'];
- for(let i=0;i<4;i++){
-  const osc=ctx.createOscillator(),gain=ctx.createGain(),filter=ctx.createBiquadFilter();
-  osc.type=toneTypes[i];osc.frequency.value=chords[0][i]*(i===3?2:1);
-  filter.type='lowpass';filter.frequency.value=i===2?500:1100;
-  gain.gain.value=[0.10,0.06,0.028,0.018][i];
-  osc.connect(filter);filter.connect(gain);gain.connect(master);osc.start();voices.push({osc,gain});
- }
+ const gains=[0.22,0.14,0.085,0.055];
+ for(let i=0;i<4;i++){const o=ctx.createOscillator(),g=ctx.createGain(),filter=ctx.createBiquadFilter();
+ o.type=i===2?'triangle':'sine';o.frequency.value=chords[0][i];
+ filter.type='lowpass';filter.frequency.value=i===2?1250:1900;
+ g.gain.value=gains[i];o.connect(filter);filter.connect(g);g.connect(master);o.start();pad.push(o)}
 }
-function update(){button.setAttribute('aria-pressed',String(playing));button.textContent=playing?'♫ Trilha ligada':'♫ Trilha';button.title=playing?'Desligar trilha instrumental':'Ativar trilha instrumental original'}
-async function toggle(){
- try{
-  if(!ctx)init();
-  if(ctx.state==='suspended')await ctx.resume();
-  playing=!playing;const t=ctx.currentTime;
-  master.gain.cancelScheduledValues(t);master.gain.setTargetAtTime(playing?0.19:0,t,1.2);
-  if(playing){setChord();pulse=setInterval(setChord,18000)}else{clearInterval(pulse);pulse=null}
-  update();
- }catch(e){button.title='Áudio indisponível neste navegador'}
+function note(freq,volume=0.20,duration=1.8){
+ if(!ctx||!playing)return;
+ const t=ctx.currentTime,o=ctx.createOscillator(),g=ctx.createGain();
+ o.type='sine';o.frequency.setValueAtTime(freq,t);
+ g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(volume,t+.09);
+ g.gain.exponentialRampToValueAtTime(0.0001,t+duration);
+ o.connect(g);g.connect(master);o.start(t);o.stop(t+duration+.05);
 }
-button.addEventListener('click',toggle);
-document.addEventListener('visibilitychange',()=>{if(!ctx||!master)return;const t=ctx.currentTime;master.gain.setTargetAtTime(playing&&!document.hidden?0.19:0,t,.7)});
-const narration=document.getElementById('carl-intro-audio');
-if(narration){narration.addEventListener('play',()=>{if(ctx&&master)master.gain.setTargetAtTime(0.025,ctx.currentTime,.5)});for(const event of ['pause','ended'])narration.addEventListener(event,()=>{if(ctx&&master)master.gain.setTargetAtTime(playing&&!document.hidden?0.19:0,ctx.currentTime,1)})}
-update();
+function tick(){
+ if(!playing||!ctx)return;
+ const now=ctx.currentTime,bar=Math.floor(step/8)%chords.length;
+ const c=chords[bar];
+ if(step%8===0)pad.forEach((o,i)=>o.frequency.setTargetAtTime(c[i],now,1.7));
+ const degree=melody[melodyStep++%melody.length];
+ if(degree>=0){const scale=[1,1.125,1.25,1.3333,1.5];note(c[0]*4*scale[degree],0.18,1.5)}
+ if(step%4===0)note(c[0]*2,0.12,2.8);
+ step++;
+}
+function volume(){if(!ctx||!master)return;const narration=document.getElementById('carl-intro-audio');const duck=narration&&!narration.paused;const v=playing&&!document.hidden?(duck?0.10:0.52):0;master.gain.setTargetAtTime(v,ctx.currentTime,.5)}
+function label(){button.setAttribute('aria-pressed',String(playing));button.textContent=playing?'♫ Música ligada':'♫ Música';button.title=playing?'Desligar música do CARL':'Ligar música original Sinfonia do Cosmos'}
+button.addEventListener('click',async()=>{try{if(!ctx)setup();await ctx.resume();playing=!playing;if(playing){tick();timer=setInterval(tick,1750)}else{clearInterval(timer);timer=null}volume();label()}catch(e){button.textContent='♫ Indisponível'}});
+document.addEventListener('visibilitychange',volume);
+const audio=document.getElementById('carl-intro-audio');if(audio)for(const event of ['play','pause','ended'])audio.addEventListener(event,volume);
+label();
 })();
 </script></body></html>
