@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#061122"><meta name="description" content="CARL: atlas interativo de astronomia do Tangram Educativo."><title>CARL — Explorador do Cosmos</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/svg+xml" href="assets/carl/icon.svg"><link rel="apple-touch-icon" href="assets/carl/icon.svg">
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#061122"><meta name="description" content="CARL: atlas interativo de astronomia do Tangram Educativo."><title>CARL — Explorador Espacial</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/svg+xml" href="assets/carl/icon.svg"><link rel="apple-touch-icon" href="assets/carl/icon.svg">
 <style>
 :root{color-scheme:dark;--line:#385578;--muted:#a7bfd8;--accent:#a8dfff}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:#edf6ff;background:radial-gradient(ellipse at 50% 24%,#173556,#08172c 56%,#030916);font:16px system-ui,-apple-system,sans-serif;min-height:100vh}
@@ -509,7 +509,7 @@ footer .carl-app-actions button,footer .carl-app-actions #carl-install{font:norm
 footer .carl-app-actions button:hover,footer .carl-app-actions button:focus-visible{opacity:1;color:#e9d3a8;border-color:#d8bb8188}
 footer .carl-app-actions #carl-install-hint{text-align:left;color:#b6c8d5}
 </style></head>
-<body><header class="carl-site-header"><div class="carl-header-identity"><strong>TANGRAM EDUCATIVO <span style="color:#91b8d7">/ CARL</span></strong><span class="carl-header-author">Professor João Faustino Junior</span></div><small>EXPLORADOR DO COSMOS</small></header>
+<body><header class="carl-site-header"><div class="carl-header-identity"><strong>TANGRAM EDUCATIVO <span style="color:#91b8d7">/ CARL</span></strong><span class="carl-header-author">Professor João Faustino Junior</span></div><small>EXPLORADOR ESPACIAL</small></header>
 <nav class="carl-navigation" id="carl-navigation" aria-label="Áreas do observatório">
 <button type="button" data-view="astros" aria-selected="true">✦ Astros</button>
 <button type="button" data-view="solar" aria-selected="false">☀ Sistema Solar</button>
@@ -1184,7 +1184,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&cosmosSoun
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;install.hidden=false});
 window.addEventListener('appinstalled',()=>{installPrompt=null;install.hidden=true;hint.textContent='CARL instalado!'});
 install.addEventListener('click',async()=>{if(installPrompt){const p=installPrompt;installPrompt=null;await p.prompt();const choice=await p.userChoice;install.hidden=true;if(choice.outcome!=='accepted')hint.textContent='Você pode instalar pelo menu do navegador.'}else hint.textContent='No navegador, abra o menu e escolha Instalar aplicativo ou Adicionar à tela inicial.'});
-share.addEventListener('click',async()=>{const data={title:'CARL — Explorador do Cosmos',text:'Explore o universo no Tangram Educativo!',url:'https://joaofaustinojr.github.io/carl-explorador-cosmos/'};try{if(navigator.share)await navigator.share(data);else if(navigator.clipboard){await navigator.clipboard.writeText(data.url);hint.textContent='Link copiado para compartilhar!'}else{hint.textContent=data.url}}catch(e){if(e.name!=='AbortError')hint.textContent='Compartilhe: '+data.url}});
+share.addEventListener('click',async()=>{const data={title:'CARL — Explorador Espacial',text:'Explore o universo no Tangram Educativo!',url:'https://joaofaustinojr.github.io/carl-explorador-cosmos/'};try{if(navigator.share)await navigator.share(data);else if(navigator.clipboard){await navigator.clipboard.writeText(data.url);hint.textContent='Link copiado para compartilhar!'}else{hint.textContent=data.url}}catch(e){if(e.name!=='AbortError')hint.textContent='Compartilhe: '+data.url}});
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 if(!('onbeforeinstallprompt'in window)){install.hidden=false;install.textContent='↓ Como instalar';}
 })();
