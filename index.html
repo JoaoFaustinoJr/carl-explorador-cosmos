@@ -409,6 +409,24 @@ footer small{display:block;color:#a6bfd0;font-style:italic}
 .mission-pager button{background:#15354a;color:#f5dfb4;border:1px solid #d5b57777;border-radius:999px;padding:9px 13px;cursor:pointer;font-size:12px}
 .mission-pager button:disabled{opacity:.35;cursor:default}
 .mission-detail{margin-bottom:80px}
+
+/* Museu visual: fotografia protagonista e explicações sob demanda. */
+.missions-lab>h3{margin:4px 0 5px}
+.mission-timeline-hint{font-size:11px;color:#9fb5c7;text-align:right;margin:0 2px -5px}
+.mission-detail{background:radial-gradient(ellipse at 50% 5%,#355c7b40,transparent 65%),#071a2b;border-color:#b99c6766}
+.mission-detail-header{align-items:center}
+.mission-detail h4{margin:8px 0 10px}
+.mission-photo{position:relative;overflow:hidden;margin:11px -8px 16px;padding:8px;border-radius:16px;background:radial-gradient(ellipse at center,#183751,#020a16 80%)}
+.mission-photo img{height:clamp(230px,56vw,450px);object-fit:contain;border:0;border-radius:10px;background:transparent}
+.mission-photo figcaption{font-size:11px;line-height:1.5;padding:0 6px}
+.mission-photo a{padding:0 6px}
+.mission-more{border:1px solid #d7b77e55;border-radius:12px;margin:14px 0;padding:10px 12px}
+.mission-more summary{cursor:pointer;color:#f1d5a0;font-size:13px;font-weight:600}
+.mission-more .mission-facts{margin:12px 0 2px}
+.mission-detail #mission-summary{font-size:14px;line-height:1.6;margin:9px 0}
+.mission-timeline button{min-height:115px}
+.mission-timeline button strong{font-size:20px}
+@media(max-width:600px){.mission-photo{margin:10px -7px 14px}.mission-photo img{height:clamp(225px,65vw,340px)}.mission-detail{padding:13px}.mission-detail h4{font-size:28px}.mission-timeline button{flex-basis:145px;min-height:118px}}
 </style></head>
 <body><header><strong>TANGRAM EDUCATIVO <span style="color:#91b8d7">/ CARL</span></strong><small>EXPLORADOR DO COSMOS</small></header>
 <nav class="carl-navigation" id="carl-navigation" aria-label="Áreas do observatório">
@@ -437,11 +455,11 @@ footer small{display:block;color:#a6bfd0;font-style:italic}
 <button type="button" data-era="stations" aria-pressed="false">Órbita terrestre</button>
 <button type="button" data-era="probes" aria-pressed="false">Sondas</button>
 </div>
-<div id="mission-timeline" class="mission-timeline" aria-label="Linha do tempo das missões espaciais"></div>
+<p class="mission-timeline-hint">← Deslize para percorrer a história →</p><div id="mission-timeline" class="mission-timeline" aria-label="Linha do tempo das missões espaciais"></div>
 <article id="mission-detail" class="mission-detail" aria-live="polite">
 <div class="mission-detail-header"><span id="mission-date" class="eyebrow"></span><span id="mission-country"></span></div>
 <h4 id="mission-name"></h4><p id="mission-summary"></p>
-<div class="mission-facts"><div><small>Objetivo e conquista</small><p id="mission-result"></p></div><div><small>Para investigar</small><p id="mission-question"></p></div></div>
+<details class="mission-more" id="mission-more"><summary>Explorar a missão e seus desafios</summary><div class="mission-facts"><div><small>Objetivo e conquista</small><p id="mission-result"></p></div><div><small>Para investigar</small><p id="mission-question"></p></div></div></details>
 <a id="mission-source" href="https://www.nasa.gov/history/" target="_blank" rel="noopener noreferrer">Conhecer a fonte histórica</a>
 </article>
 <p class="mission-disclaimer">Datas e acontecimentos históricos resumidos para fins educativos. Os registros são incorporados gradualmente, com identificação de autoria, data e licença. Fotografias de réplicas são identificadas como tal.</p>
@@ -884,7 +902,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&cosmosSoun
  archive.append(archiveTag,archiveTitle,archiveType,archiveLink);
  document.getElementById('mission-detail').append(archive);
  const photoBox=document.createElement('figure');photoBox.className='mission-photo';photoBox.hidden=true;
- const photo=document.createElement('img');photo.loading='lazy';photo.alt='';
+ const photo=document.createElement('img');photo.loading='lazy';photo.alt='';photo.decoding='async';
  const caption=document.createElement('figcaption'),creditLink=document.createElement('a');creditLink.target='_blank';creditLink.rel='noopener noreferrer';
  photoBox.append(photo,caption,creditLink);
  document.getElementById('mission-detail').insertBefore(photoBox,document.getElementById('mission-summary'));
@@ -905,6 +923,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&cosmosSoun
   document.getElementById('mission-date').textContent=m.year;
   document.getElementById('mission-country').textContent=m.nation;
   document.getElementById('mission-name').textContent=m.name;
+  document.getElementById('mission-more').open=false;
   document.getElementById('mission-summary').textContent=m.summary;
   document.getElementById('mission-result').textContent=m.result;
   document.getElementById('mission-question').textContent=m.question;
