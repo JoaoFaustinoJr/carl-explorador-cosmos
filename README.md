@@ -1,19 +1,25 @@
-# CARL — Explorador do Cosmos
+# CARL — Explorador Espacial
 
-Projeto educativo do **Tangram Educativo** dedicado à astronomia, às escalas do Universo e às relações matemáticas entre massa, distância, gravidade e movimento.
+Observatório educativo de astronomia da **família Tangram Educativo**.
 
-## Atlas visual V25
+**Concepção, autoria e coordenação pedagógica:** Prof. João Faustino da Silva Júnior (JFJr).
 
-A experiência foi concebida para apresentar primeiro os corpos celestes e oferecer os dados e as equações sob demanda. As ilustrações são artísticas e não substituem fotografias ou modelos astronômicos científicos.
+**Portal Tangram Educativo:** https://joaofaustinojr.github.io/-portal-de-projetos/
 
-## Estrutura planejada
+**Aplicativo:** https://joaofaustinojr.github.io/carl-explorador-cosmos/
 
-- `index.html`: entrada do atlas interativo
-- `assets/carl/`: imagens dos corpos celestes (PNG)
-- `docs/`: referências, créditos e orientações didáticas
+## Sobre o projeto
 
-## Estado de publicação
+O CARL apresenta conteúdos interativos de astronomia, corpos celestes, Sistema Solar, céu noturno, Via Láctea, luz e distâncias, história da astronomia e exploração espacial. É um projeto integrante da família de aplicativos educacionais Tangram Educativo.
 
-Repositório inicializado. O pacote local V25 contém 17 imagens e um protótipo HTML; a importação dos arquivos binários ainda está pendente. Não confundir o repositório inicial com a implantação completa do atlas.
+## Autoria, licença e atribuição
 
-**Cada número conta uma história. A ciência revela o Universo.**
+O código-fonte deste repositório é distribuído sob a licença **MIT**, conforme o arquivo [LICENSE](LICENSE). A licença permite uso, modificação e redistribuição do software, desde que o aviso de copyright e a licença sejam preservados. A indicação de autoria não altera nem restringe retroativamente esses direitos.
+
+A identidade visual e o nome Tangram Educativo identificam a origem do projeto; o uso de imagens, fotografias, fontes e áudios de terceiros depende das respectivas licenças e créditos. A licença MIT do código **não** concede automaticamente direitos sobre esses materiais.
+
+Ao citar o projeto, utilize: **CARL — Explorador Espacial, família Tangram Educativo. Concepção e autoria: Prof. João Faustino da Silva Júnior (JFJr).**
+
+## Créditos científicos
+
+As imagens científicas e fotografias utilizadas no observatório devem ser acompanhadas dos créditos e links de suas fontes. Ilustrações didáticas não devem ser apresentadas como fotografias observacionais.
