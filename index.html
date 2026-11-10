@@ -477,6 +477,22 @@ footer small{display:block;color:#a6bfd0;font-style:italic}
 .history-item{transition:border-color .2s ease}
 .history-media img{object-position:center}
 @media(prefers-reduced-motion:reduce){.mission-timeline button{transition:none}}
+
+/* Cartões do museu: altura uniforme, imagem fixa e informações compactas. */
+.mission-timeline{align-items:stretch;gap:10px;padding:8px 3px 17px}
+.mission-timeline button,.mission-timeline button:has(.mission-thumbnail){box-sizing:border-box;display:flex;flex-direction:column;flex:0 0 158px;width:158px;height:242px;min-height:0;max-height:242px;padding:0 0 12px;overflow:hidden;text-align:left;border-radius:15px;scroll-snap-align:start}
+.mission-card-visual{position:relative;display:flex;align-items:center;justify-content:center;width:100%;height:116px;min-height:116px;overflow:hidden;background:radial-gradient(ellipse at 50% 45%,#355b75,#071b2f 78%)}
+.mission-card-visual .mission-icon{font-size:42px;filter:drop-shadow(0 0 15px #b5d8f755)}
+.mission-card-visual .mission-icon[hidden]{display:none}
+.mission-card-visual .mission-thumbnail{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;object-position:center;margin:0;border:0;border-radius:0;filter:none}
+.mission-timeline button>small,.mission-timeline button>strong{margin-left:12px;margin-right:10px}
+.mission-timeline button>small:first-of-type{margin-top:10px;color:#c7d7e3}
+.mission-timeline button strong,.mission-timeline button:has(.mission-thumbnail) strong{font:normal 19px/1.13 Georgia,serif;color:#f3d7a2;margin-top:6px;margin-bottom:5px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.mission-timeline button>small:last-child{font-size:10px;line-height:1.25;margin-top:auto}
+.mission-timeline button[aria-pressed=true]{transform:none;border-color:#e8c889;box-shadow:inset 0 0 0 1px #e8c889,0 7px 22px #0005}
+.carl-view-controls{margin:3px auto 3px!important}
+.cosmos-audio-bar{margin-top:0!important;margin-bottom:5px!important}
+@media(max-width:600px){.mission-timeline button,.mission-timeline button:has(.mission-thumbnail){flex-basis:146px;width:146px;height:218px;max-height:218px}.mission-card-visual{height:100px;min-height:100px}.mission-timeline button strong,.mission-timeline button:has(.mission-thumbnail) strong{font-size:18px}}
 </style></head>
 <body><header><strong>TANGRAM EDUCATIVO <span style="color:#91b8d7">/ CARL</span></strong><small>EXPLORADOR DO COSMOS</small></header>
 <nav class="carl-navigation" id="carl-navigation" aria-label="Áreas do observatório">
@@ -1095,8 +1111,15 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&cosmosSoun
   for(const m of subset){
    const b=document.createElement('button');b.type='button';b.dataset.id=m.id;b.setAttribute('aria-pressed','false');
    const media=missionMedia[m.id];
-   if(media){const thumbnail=document.createElement('img');thumbnail.className='mission-thumbnail';thumbnail.src=media.url;thumbnail.alt='';thumbnail.loading='lazy';thumbnail.addEventListener('error',()=>{thumbnail.remove();const fallback=document.createElement('span');fallback.className='mission-icon';fallback.textContent=m.icon;b.prepend(fallback)});b.append(thumbnail);}
-   else{const ico=document.createElement('span');ico.className='mission-icon';ico.textContent=m.icon;b.append(ico);}
+   const visual=document.createElement('span');visual.className='mission-card-visual';
+   const symbol=document.createElement('span');symbol.className='mission-icon';symbol.textContent=m.icon;visual.append(symbol);
+   if(media){
+    const thumbnail=document.createElement('img');thumbnail.className='mission-thumbnail';thumbnail.src=media.url;thumbnail.alt='';thumbnail.loading='lazy';thumbnail.decoding='async';
+    thumbnail.addEventListener('load',()=>{if(thumbnail.naturalWidth>0)symbol.hidden=true;});
+    thumbnail.addEventListener('error',()=>{thumbnail.remove();symbol.hidden=false;});
+    visual.append(thumbnail);
+   }
+   b.append(visual);
    const year=document.createElement('small');year.textContent=m.year;
    const title=document.createElement('strong');title.textContent=m.name;
    const country=document.createElement('small');country.textContent=m.nation;
