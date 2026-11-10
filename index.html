@@ -76,10 +76,30 @@ main{padding:24px 9px 35px}
 .info .summary{padding:0 8px}
 }
 @media(prefers-reduced-motion:reduce){.tile,.tile img,.hero-image{transition:none}}
-.source-guide{max-width:710px;margin:24px auto 0;padding:20px;text-align:left;border:1px solid #6e91ad4b;border-radius:20px;background:linear-gradient(145deg,#0e2940dd,#091b30e8)}.source-guide h3{margin:5px 0 8px;letter-spacing:-.025em}.source-guide p{color:#b6cbde;font-size:13px;line-height:1.6}.source-guide a{color:#b9e3ff}.source-guide .source-links{display:flex;flex-wrap:wrap;gap:8px}.source-guide .source-links a{padding:9px 11px;border:1px solid #4e7190;border-radius:11px;text-decoration:none;background:#122e49}.source-guide small{display:block;color:#a6bdd0;margin-top:12px;line-height:1.5}.image-credit{max-width:720px;margin:0 auto 12px;text-align:center;font-size:11px;color:#aec5d9;line-height:1.6}.image-credit a{color:#b9e5ff;text-decoration:underline;text-underline-offset:3px}.image-credit .image-type{display:inline-block;border:1px solid #547795;padding:2px 8px;border-radius:999px;margin-right:5px;color:#e4f4ff}</style></head>
+.source-guide{max-width:710px;margin:24px auto 0;padding:20px;text-align:left;border:1px solid #6e91ad4b;border-radius:20px;background:linear-gradient(145deg,#0e2940dd,#091b30e8)}.source-guide h3{margin:5px 0 8px;letter-spacing:-.025em}.source-guide p{color:#b6cbde;font-size:13px;line-height:1.6}.source-guide a{color:#b9e3ff}.source-guide .source-links{display:flex;flex-wrap:wrap;gap:8px}.source-guide .source-links a{padding:9px 11px;border:1px solid #4e7190;border-radius:11px;text-decoration:none;background:#122e49}.source-guide small{display:block;color:#a6bdd0;margin-top:12px;line-height:1.5}.image-credit{max-width:720px;margin:0 auto 12px;text-align:center;font-size:11px;color:#aec5d9;line-height:1.6}.image-credit a{color:#b9e5ff;text-decoration:underline;text-underline-offset:3px}.image-credit .image-type{display:inline-block;border:1px solid #547795;padding:2px 8px;border-radius:999px;margin-right:5px;color:#e4f4ff}
+/* Identidade visual alinhada ao Portal de Projetos */
+:root{--gold:#e4c080;--ink:#071426;--muted:#b8c7d6;--accent:#e4c080;--line:#987d5260}
+body{color:#f9f4e9;background:radial-gradient(ellipse at 77% 20%,#244761,#0c263e 46%,#061323 83%);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+header{background:#071426d9;border-bottom:1px solid #e4c08035;min-height:72px;backdrop-filter:blur(14px)}
+header strong{font:1.18rem Georgia,serif;letter-spacing:.035em;color:var(--gold)}
+header small{color:#d9d1c3;letter-spacing:.13em}
+h1,h2{font-family:Georgia,'Times New Roman',serif;font-weight:500;letter-spacing:-.025em}
+h1{color:#fff9ed;font-size:clamp(34px,6vw,54px)}
+.eyebrow{color:var(--gold);font-weight:750}
+.stage{border:1px solid #e4c0802d;box-shadow:0 22px 65px #0005,inset 0 0 90px #e4c08008}
+.source-guide{border-color:#e4c08050;background:linear-gradient(145deg,#15374cdd,#071426ef)}
+.source-guide .source-links a{border-color:#e4c08055;background:#10283c}
+.image-credit a{color:#efd5a3}
+.cosmos-sound{display:inline-flex;align-items:center;gap:9px;justify-content:center;min-height:42px;border:1px solid #e4c08085;border-radius:999px;padding:9px 16px;background:linear-gradient(140deg,#17354b,#0a1d30);color:#f9e8c6;cursor:pointer;font:600 13px system-ui,sans-serif;box-shadow:0 5px 18px #0004}
+.cosmos-sound[aria-pressed="true"]{background:linear-gradient(140deg,#5d4728,#203c4b);border-color:#f4ce84}
+.cosmos-sound:focus-visible{outline:3px solid #f4ce84;outline-offset:3px}
+.cosmos-audio-bar{display:flex;justify-content:center;align-items:center;gap:10px;margin:14px auto 6px;flex-wrap:wrap}
+.cosmos-audio-note{color:#b8c7d6;font-size:11px}
+@media(max-width:600px){header{padding:12px 14px}header strong{font-size:1rem}header small{font-size:10px}.cosmos-audio-bar{margin:12px auto}}
+</style></head>
 <body><header><strong>TANGRAM EDUCATIVO <span style="color:#91b8d7">/ CARL</span></strong><small>EXPLORADOR DO COSMOS</small></header>
 <main><div class="eyebrow">CARL · OBSERVATÓRIO INTERATIVO</div><h1>O Universo em números.</h1><p>Contemple. Escolha um corpo celeste. Descubra sua matemática.</p>
-<div class="stage" id="stage"><div class="stars"></div><img id="hero" class="hero-image" src="assets/carl/terra.png" alt="Ilustração artística da Terra"><span class="stage-tip">Toque na imagem para ampliar · Deslize para mudar</span></div>
+<div class="cosmos-audio-bar"><button class="cosmos-sound" id="cosmos-sound" type="button" aria-pressed="false" aria-label="Ativar som ambiente do Cosmos">♫ &nbsp; Ativar som do Cosmos</button><span class="cosmos-audio-note">Paisagem sonora sintetizada · não é som captado no espaço</span></div><div class="stage" id="stage"><div class="stars"></div><img id="hero" class="hero-image" src="assets/carl/terra.png" alt="Ilustração artística da Terra"><span class="stage-tip">Toque na imagem para ampliar · Deslize para mudar</span></div>
 <div id="image-credit" class="image-credit" aria-live="polite"></div><div class="filters" id="filters" aria-label="Categorias de objetos"></div>
 <div class="carousel"><button id="prev" class="arrow" aria-label="Anterior">‹</button><nav id="carousel" aria-label="Carrossel de corpos celestes"></nav><button id="next" class="arrow" aria-label="Próximo">›</button></div>
 <section class="info"><div class="eyebrow" id="kind"></div><h2 id="name">Terra</h2><p id="summary" class="summary"></p><button id="open" class="primary" aria-expanded="false" aria-controls="details">Explorar números e descobertas <span aria-hidden="true">⌄</span></button>
@@ -246,4 +266,42 @@ function selectGalactic(id){const p=galacticPlaces.find(x=>x.id===id);if(!p)retu
 selectGalactic('sol');
 })();
 
+</script><script>
+/* Som do Cosmos: síntese original, discreta, ativada somente por gesto do usuário. */
+let cosmosAudio=null,cosmosSoundOn=false;
+async function toggleCosmosSound(){
+ const button=document.getElementById('cosmos-sound');
+ if(!cosmosSoundOn){
+  try{
+   const AudioContextType=window.AudioContext||window.webkitAudioContext;
+   if(!AudioContextType)throw new Error('Web Audio indisponível');
+   if(!cosmosAudio){
+    const ctx=new AudioContextType(),master=ctx.createGain();
+    master.gain.value=0;master.connect(ctx.destination);
+    const voices=[55,82.41,110,164.81];
+    const oscillators=voices.map((freq,i)=>{
+      const osc=ctx.createOscillator(),g=ctx.createGain(),filter=ctx.createBiquadFilter();
+      osc.type=i%2?'sine':'triangle';osc.frequency.value=freq;
+      filter.type='lowpass';filter.frequency.value=350;
+      g.gain.value=[.12,.07,.045,.025][i];
+      osc.connect(filter);filter.connect(g);g.connect(master);osc.start();return osc;
+    });
+    const lfo=ctx.createOscillator(),lfoGain=ctx.createGain();
+    lfo.frequency.value=.075;lfoGain.gain.value=.025;
+    lfo.connect(lfoGain);lfoGain.connect(master.gain);lfo.start();
+    cosmosAudio={ctx,master,oscillators,lfo};
+   }
+   await cosmosAudio.ctx.resume();
+   cosmosAudio.master.gain.cancelScheduledValues(cosmosAudio.ctx.currentTime);
+   cosmosAudio.master.gain.setTargetAtTime(.13,cosmosAudio.ctx.currentTime,1.5);
+   cosmosSoundOn=true;button.setAttribute('aria-pressed','true');button.textContent='♫  Desativar som do Cosmos';
+  }catch(e){button.textContent='Áudio indisponível neste navegador';button.disabled=true}
+ }else{
+  cosmosAudio.master.gain.cancelScheduledValues(cosmosAudio.ctx.currentTime);
+  cosmosAudio.master.gain.setTargetAtTime(0,cosmosAudio.ctx.currentTime,.35);
+  cosmosSoundOn=false;button.setAttribute('aria-pressed','false');button.textContent='♫  Ativar som do Cosmos';
+ }
+}
+document.getElementById('cosmos-sound').addEventListener('click',toggleCosmosSound);
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&cosmosSoundOn)toggleCosmosSound()});
 </script></body></html>
