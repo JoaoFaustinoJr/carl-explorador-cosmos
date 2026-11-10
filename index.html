@@ -465,6 +465,18 @@ footer small{display:block;color:#a6bfd0;font-style:italic}
 .halley-dates small{display:block;font-size:10px;color:#b9cdd9;line-height:1.35}
 .halley-copy .halley-credit{font-size:10px;color:#9eb3c2}
 @media(max-width:700px){.halley-feature{grid-template-columns:1fr}.halley-visual{min-height:220px}.halley-dates strong{font-size:19px}}
+
+/* Galeria documental: cartões legíveis, rolagem e imagem em destaque */
+.mission-timeline{scrollbar-width:thin;scrollbar-color:#d5b77b88 #071827;overscroll-behavior-inline:contain}
+.mission-timeline button{transition:border-color .2s ease,background .2s ease,transform .2s ease}
+.mission-timeline button:focus-visible,.mission-filters button:focus-visible{outline:2px solid #f3dba7;outline-offset:3px}
+.mission-timeline button[aria-pressed=true]{background:linear-gradient(160deg,#1f455e,#0c2338);transform:translateY(-2px)}
+.mission-thumbnail{object-position:center}
+.halley-visual:has(img[hidden]){background:radial-gradient(ellipse at 40% 40%,#9bb9c966,#14314c 45%,#020917 90%)}
+.halley-visual:has(img[hidden])::after{content:'☄';position:absolute;inset:0;display:grid;place-items:center;color:#e8d3a9;font-size:110px;text-shadow:0 0 35px #b9d5e888}
+.history-item{transition:border-color .2s ease}
+.history-media img{object-position:center}
+@media(prefers-reduced-motion:reduce){.mission-timeline button{transition:none}}
 </style></head>
 <body><header><strong>TANGRAM EDUCATIVO <span style="color:#91b8d7">/ CARL</span></strong><small>EXPLORADOR DO COSMOS</small></header>
 <nav class="carl-navigation" id="carl-navigation" aria-label="Áreas do observatório">
@@ -960,14 +972,16 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&cosmosSoun
   const data=await res.json(),pages=Object.values(data.query?.pages||{});
   const found=pages.find(p=>p.imageinfo?.[0]?.thumburl&&/\.(jpg|jpeg|png|webp)$/i.test(p.title));
   if(!found)throw Error('Sem fotografia');
-  return {url:found.imageinfo[0].thumburl,page:found.imageinfo[0].descriptionurl||'https://commons.wikimedia.org/wiki/'+encodeURIComponent(found.title),name:found.title.replace(/^File:/,'').replace(/_/g,' ')};
+  const info=found.imageinfo[0],meta=info.extmetadata||{};
+  const clean=value=>String(value||'').replace(/<[^>]*>/g,' ').replace(/&nbsp;/g,' ').replace(/\s+/g,' ').trim().slice(0,150);
+  return {url:info.thumburl,page:info.descriptionurl||'https://commons.wikimedia.org/wiki/'+encodeURIComponent(found.title),name:found.title.replace(/^File:/,'').replace(/_/g,' '),author:clean(meta.Artist?.value),license:clean(meta.LicenseShortName?.value)};
  }
  const halleyImage=document.getElementById('halley-image');
  if(halleyImage)halleyImage.addEventListener('error',async()=>{
   if(halleyImage.dataset.retried){halleyImage.hidden=true;return;}
   halleyImage.dataset.retried='1';
   try{const result=await commonsPhoto('Comet Halley 1986 photograph');halleyImage.src=result.url;halleyImage.alt=result.name;
-   const credit=document.querySelector('.halley-credit');if(credit){credit.replaceChildren(document.createTextNode('Imagem: '+result.name+' · '));const link=document.createElement('a');link.href=result.page;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Autoria e licença';credit.append(link);}
+   const credit=document.querySelector('.halley-credit');if(credit){credit.replaceChildren(document.createTextNode('Imagem: '+result.name+(result.author?' · '+result.author:'')+(result.license?' · '+result.license:'')+' · '));const link=document.createElement('a');link.href=result.page;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Autoria e licença';credit.append(link);}
   }catch(e){halleyImage.hidden=true;}
  });
  const historyImages=Array.from(document.querySelectorAll('.history-media img'));
@@ -979,7 +993,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&cosmosSoun
    img.dataset.retried='1';
    try{const result=await commonsPhoto(historyQueries[index]);img.src=result.url;img.alt=result.name;
     if(link){link.href=result.page;link.textContent='Ver arquivo e licença';}
-    const caption=figure.querySelector('figcaption');if(caption)caption.firstChild.textContent=result.name+' · ';
+    const caption=figure.querySelector('figcaption');if(caption)caption.firstChild.textContent=result.name+(result.author?' · '+result.author:'')+(result.license?' · '+result.license:'')+' · ';
    }catch(e){figure.hidden=true;}
   });
  });
@@ -1043,7 +1057,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&cosmosSoun
   try{const result=await commonsPhoto(missionQueries[key]||key);
    if(photo.dataset.mission!==key)return;
    photo.src=result.url;photo.alt=result.name;creditLink.href=result.page;
-   caption.textContent='Arquivo Wikimedia Commons · '+result.name+' · consultar autoria e licença na fonte';
+   caption.textContent='Arquivo Wikimedia Commons · '+result.name+(result.author?' · '+result.author:'')+(result.license?' · '+result.license:'')+' · detalhes na fonte';
   }catch(e){photoBox.hidden=true;missionGalleryNote.hidden=false;photo.removeAttribute('src');}
  });
  const missionPager=document.createElement('div');missionPager.className='mission-pager';
@@ -1089,6 +1103,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&cosmosSoun
    b.append(year,title,country);b.addEventListener('click',()=>select(m));timeline.append(b);
   }
   if(subset.length)select(subset[0]);
+  timeline.scrollLeft=0;
  }
  function navigateMission(step){
   const index=currentMissions.findIndex(m=>m.id===currentMissionId),next=currentMissions[index+step];
