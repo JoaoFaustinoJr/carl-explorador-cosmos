@@ -427,6 +427,12 @@ footer small{display:block;color:#a6bfd0;font-style:italic}
 .mission-timeline button{min-height:115px}
 .mission-timeline button strong{font-size:20px}
 @media(max-width:600px){.mission-photo{margin:10px -7px 14px}.mission-photo img{height:clamp(225px,65vw,340px)}.mission-detail{padding:13px}.mission-detail h4{font-size:28px}.mission-timeline button{flex-basis:145px;min-height:118px}}
+
+.mission-milestone{margin:14px 0;padding:13px 15px;border-left:3px solid #e1bd78;border-radius:4px 12px 12px 4px;background:linear-gradient(90deg,#dfb96817,transparent)}
+.mission-milestone[hidden]{display:none}
+.mission-milestone small{display:block;color:#c8a869;font-size:10px;letter-spacing:.12em;font-weight:700}
+.mission-milestone strong{display:block;color:#f4dfb9;font-size:18px;margin:5px 0}
+.mission-milestone p{margin:3px 0 0;font-size:13px;line-height:1.5;color:#d2deea}
 </style></head>
 <body><header><strong>TANGRAM EDUCATIVO <span style="color:#91b8d7">/ CARL</span></strong><small>EXPLORADOR DO COSMOS</small></header>
 <nav class="carl-navigation" id="carl-navigation" aria-label="Áreas do observatório">
@@ -878,6 +884,23 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&cosmosSoun
   apollo11:{url:'https://commons.wikimedia.org/wiki/Special:FilePath/AS11-40-5903%20-%20Buzz%20Aldrin%20by%20Neil%20Armstrong%20(full%20frame).jpg?width=900',credit:'NASA · Neil Armstrong · AS11-40-5903 (1969)',page:'https://science.nasa.gov/resource/apollo-11-buzz-aldrin/',kind:'Fotografia original'},
   gagarin:{url:'https://commons.wikimedia.org/wiki/Special:FilePath/Yuri%20Gagarin%20(1961).jpg?width=750',credit:'Arto Jousi · Museu Finlandês de Fotografia (1961)',page:'https://commons.wikimedia.org/wiki/File:Yuri_Gagarin_(1961).jpg',kind:'Fotografia histórica · licença na fonte'}
  };
+ const missionMilestones={
+  sputnik:['4 de outubro de 1957','Lançamento do Sputnik 1 a partir do Cosmódromo de Baikonur.'],
+  laika:['3 de novembro de 1957','Sputnik 2 leva Laika à órbita terrestre; a cadela não retornou.'],
+  gagarin:['12 de abril de 1961','Vostok 1 completa uma órbita com Yuri Gagarin.'],
+  tereshkova:['16 de junho de 1963','Vostok 6 leva Valentina Tereshkova ao espaço.'],
+  apollo8:['24 de dezembro de 1968','Tripulação da Apollo 8 fotografa o nascer da Terra sobre a Lua.'],
+  apollo11:['20 de julho de 1969','O módulo Eagle pousa na Lua; Armstrong e Aldrin caminham na superfície.'],
+  salyut:['19 de abril de 1971','Lançamento da primeira estação espacial, Salyut 1.'],
+  voyager:['1977','Voyager 2 e Voyager 1 são lançadas para estudar o Sistema Solar exterior.'],
+  shuttle:['12 de abril de 1981','Columbia parte para a missão STS-1, primeiro voo orbital do programa.'],
+  mir:['20 de fevereiro de 1986','Lançamento do módulo central da estação Mir.'],
+  iss:['20 de novembro de 1998','Lançamento do módulo Zarya, início da montagem da ISS.'],
+  rosetta:['12 de novembro de 2014','Philae realiza pouso histórico no cometa 67P.'],
+  change:['3 de janeiro de 2019','Chang’e 4 realiza o primeiro pouso suave na face oculta da Lua.'],
+  perseverance:['18 de fevereiro de 2021','Perseverance pousa na cratera Jezero, em Marte.'],
+  chandrayaan:['23 de agosto de 2023','Chandrayaan-3 pousa na região polar sul da Lua.']
+ };
  const missionArchives={
   tereshkova:{title:'Valentina Tereshkova · Vostok 6',type:'Arquivo histórico de voos humanos',url:'https://www.esa.int/About_Us/ESA_history',credit:'ESA · História espacial'},
   gagarin:{title:'Yuri Gagarin · Vostok 1',type:'Arquivo histórico de voos humanos',url:'https://www.esa.int/About_Us/ESA_history',credit:'ESA · História espacial'},
@@ -895,6 +918,11 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&cosmosSoun
   perseverance:{title:'Perseverance · fotografias de Marte',type:'Arquivo de missão NASA',url:'https://science.nasa.gov/mission/mars-2020-perseverance/',credit:'NASA / JPL-Caltech'},
   rosetta:{title:'Rosetta · arquivo científico ESA',type:'Arquivo da missão',url:'https://www.esa.int/Science_Exploration/Space_Science/Rosetta',credit:'ESA'}
  };
+ const milestone=document.createElement('div');milestone.className='mission-milestone';
+ const milestoneLabel=document.createElement('small');milestoneLabel.textContent='MARCO HISTÓRICO';
+ const milestoneDate=document.createElement('strong'),milestoneText=document.createElement('p');
+ milestone.append(milestoneLabel,milestoneDate,milestoneText);
+ document.getElementById('mission-detail').insertBefore(milestone,document.getElementById('mission-more'));
  const archive=document.createElement('aside');archive.className='mission-archive';archive.hidden=true;
  const archiveTag=document.createElement('small');archiveTag.textContent='ACERVO DOCUMENTAL';
  const archiveTitle=document.createElement('strong'),archiveType=document.createElement('p'),archiveLink=document.createElement('a');
@@ -928,6 +956,8 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&cosmosSoun
   document.getElementById('mission-result').textContent=m.result;
   document.getElementById('mission-question').textContent=m.question;
   document.getElementById('mission-source').href=m.source;
+  const milestoneData=missionMilestones[m.id];milestone.hidden=!milestoneData;
+  if(milestoneData){milestoneDate.textContent=milestoneData[0];milestoneText.textContent=milestoneData[1];}
   const record=missionArchives[m.id];archive.hidden=!record;
   if(record){archiveTitle.textContent=record.title;archiveType.textContent=record.type+' · '+record.credit;archiveLink.href=record.url;}
   const media=missionMedia[m.id];photoBox.hidden=!media;
