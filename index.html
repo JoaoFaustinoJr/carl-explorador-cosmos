@@ -119,7 +119,9 @@ const formatRatio=x=>x>=100?number(Math.round(x)):number(Math.round(x*10)/10);
 function currentList(){return bodies.filter(b=>category==='Todos'||b.cat===category)}
 function renderFilters(){const box=$('filters');box.replaceChildren();categories.forEach(c=>{const btn=document.createElement('button');btn.textContent=c;btn.setAttribute('aria-pressed',String(c===category));btn.onclick=()=>{category=c;renderFilters();renderCarousel();const visible=currentList();if(!visible.some(b=>b.id===selected))select(visible[0].id);else centerTile()};box.append(btn)})}
 const verifiedMedia={
-terra:{url:'https://commons.wikimedia.org/wiki/Special:FilePath/The_Earth_seen_from_Apollo_17.jpg?width=960',type:'Fotografia',credit:'NASA · Apollo 17 (1972)',source:'https://commons.wikimedia.org/wiki/File:The_Earth_seen_from_Apollo_17.jpg'}
+terra:{url:'https://commons.wikimedia.org/wiki/Special:FilePath/The_Earth_seen_from_Apollo_17.jpg?width=960',type:'Fotografia',credit:'NASA · Apollo 17 (1972)',source:'https://commons.wikimedia.org/wiki/File:The_Earth_seen_from_Apollo_17.jpg'},
+jupiter:{url:'https://commons.wikimedia.org/wiki/Special:FilePath/Jupiter_in_true_color.jpg?width=960',type:'Composição de imagens em cores próximas das naturais',credit:'NASA/JPL · Cassini (2000)',source:'https://commons.wikimedia.org/wiki/File:Jupiter_in_true_color.jpg'},
+saturno:{url:'https://commons.wikimedia.org/wiki/Special:FilePath/Natural_color_global_view_of_Saturn_and_its_rings.jpg?width=960',type:'Imagem composta em cores naturais',credit:'NASA/Cassini · processamento Kevin M. Gill',source:'https://commons.wikimedia.org/wiki/File:Natural_color_global_view_of_Saturn_and_its_rings.jpg'}
 };
 function imageUrl(b){return verifiedMedia[b.id]?.url||'assets/carl/'+b.id+'.png'}
 function attachImageFallback(img,id){img.onerror=()=>{img.onerror=null;img.src='assets/carl/'+id+'.png';if(img.id==='hero')$('image-credit').textContent='Ilustração didática · imagem original indisponível no momento.'}}
