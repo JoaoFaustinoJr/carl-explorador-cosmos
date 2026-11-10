@@ -592,17 +592,16 @@ footer .carl-app-actions #carl-install-hint{text-align:left;color:#b6c8d5}
 .cin-stars{opacity:.26}
 .cin-actions button{box-shadow:none!important;background:#07172bc9!important;border:1px solid #a8bed0aa!important;padding:11px 20px!important;font-size:13px!important}
 @media(max-width:600px){.cin-voyager{width:70vw!important}.cin-location{bottom:15%!important}.cin-galaxy-photo{background-size:cover}}
-</style></head>
-<body><div id="carl-cinematic" class="carl-cinematic" role="dialog" aria-modal="true" aria-label="Viagem de Jaboti à Via Láctea" hidden>
-<div class="cin-stars" aria-hidden="true"></div><div class="cin-galaxy" aria-hidden="true"><div class="cin-galaxy-photo"></div><div class="cin-galaxy-haze"></div></div>
-<div class="cin-earth" aria-hidden="true"><div class="cin-globe"><canvas id="cin-earth-3d" class="cin-earth-3d" aria-hidden="true"></canvas><div class="cin-globe-surface"></div><div class="cin-globe-shade"></div><div class="cin-globe-glow"></div></div></div>
 
-<div class="cin-voyager" aria-hidden="true"><svg viewBox="0 0 650 430" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="voymetal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d9e4ed"/><stop offset=".5" stop-color="#6d8197"/><stop offset="1" stop-color="#e9d7aa"/></linearGradient><radialGradient id="voydish"><stop stop-color="#d8e6ee"/><stop offset=".7" stop-color="#879aa8"/><stop offset="1" stop-color="#344759"/></radialGradient></defs><g transform="translate(320 216) rotate(-22)" stroke-linejoin="round"><path d="M-245 -115 L-65 -22 M-245 115 L-65 22 M65 -22 L240 -105 M65 22 L240 105" stroke="#a8bdcb" stroke-width="5"/><path d="M-250 -126 L-238 -105 L-55 -10 L-70 -32 Z M-250 126 L-238 105 L-55 10 L-70 32 Z" fill="#56728c" stroke="#d1e4ed" stroke-width="2"/><rect x="-63" y="-44" width="126" height="88" rx="7" fill="url(#voymetal)" stroke="#e2e9ee" stroke-width="3"/><rect x="-50" y="-32" width="100" height="64" fill="#c4a866" opacity=".85"/><path d="M-45 -31 H45 M-45 -16 H45 M-45 0 H45 M-45 16 H45 M-45 31 H45" stroke="#7d6c45" stroke-width="2"/><path d="M55 0 L142 -5" stroke="#d1dce4" stroke-width="8"/><ellipse cx="172" cy="-7" rx="65" ry="85" fill="url(#voydish)" stroke="#dbe7ed" stroke-width="4"/><ellipse cx="182" cy="-7" rx="43" ry="62" fill="none" stroke="#dae4eb" stroke-width="2" opacity=".7"/><path d="M182 -7 L236 -7" stroke="#e2eaf0" stroke-width="5"/><circle cx="237" cy="-7" r="7" fill="#e7dfc7"/><path d="M-50 0 L-132 0 L-182 -48" stroke="#bacbd5" stroke-width="5" fill="none"/><rect x="-195" y="-70" width="31" height="46" rx="2" fill="#385a77" stroke="#b7cbd9" stroke-width="3"/><path d="M-50 0 L-128 58 L-178 85" stroke="#d1dce5" stroke-width="4" fill="none"/><rect x="-220" y="74" width="62" height="24" fill="#263d5c" stroke="#a5c5d8" stroke-width="2"/><path d="M-220 81 H-158 M-220 89 H-158" stroke="#7fa1bc" stroke-width="2"/></g></svg></div><div class="cin-location"><strong id="cin-place">JABOTI · PARANÁ</strong><small id="cin-coords">23,74° S · 50,07° O</small></div>
-<div class="cin-caption" aria-live="off"><span id="cin-chapter"></span><h2 id="cin-title"></h2></div>
-<div class="cin-final" aria-hidden="true"><span>TANGRAM EDUCATIVO</span><h2>CARL</h2><p>EXPLORADOR ESPACIAL</p><i class="cin-final-rule"></i></div>
-<div class="cin-actions"><button type="button" id="cin-skip">Pular introdução ↗</button><button type="button" id="cin-enter" hidden>Entrar no observatório →</button></div>
-<div class="cin-progress" aria-hidden="true"><span></span></div>
-</div><header class="carl-site-header"><div class="carl-header-identity"><strong>TANGRAM EDUCATIVO <span style="color:#91b8d7">/ CARL</span></strong><span class="carl-header-author">Professor João Faustino Junior</span></div><small>EXPLORADOR ESPACIAL</small></header>
+/* Capa definitiva: apenas a arte aprovada, sem simulação, legendas ou efeitos. */
+.carl-cinematic.carl-static-cover{position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;background:#061122;padding:24px 18px;overflow:auto;animation:none!important}
+.carl-cinematic.carl-static-cover[hidden]{display:none!important}
+.carl-cover-image{display:block;width:min(80vw,65vh,470px);height:auto;max-height:72vh;object-fit:contain;border-radius:18px;animation:none!important;box-shadow:none}
+.carl-cover-enter{display:block;position:static!important;min-height:46px;padding:12px 25px;border:1px solid #9fb8cb;border-radius:999px;background:#10243a;color:#f0f4f8;font:500 14px system-ui,sans-serif;letter-spacing:.02em;cursor:pointer}
+.carl-cover-enter:focus-visible{outline:2px solid #fff;outline-offset:4px}
+@media(max-width:600px){.carl-cover-image{width:min(90vw,62vh)}.carl-cinematic.carl-static-cover{gap:18px}}
+</style></head>
+<body><div id="carl-cinematic" class="carl-cinematic carl-static-cover" role="dialog" aria-modal="true" aria-label="CARL — Explorador Espacial" hidden><img class="carl-cover-image" src="assets/carl/CARL_Explorador_Espacial_icone.png" alt="CARL — Explorador Espacial: Terra vista do espaço, com o nome do aplicativo"><button type="button" id="cin-enter" class="carl-cover-enter">Entrar no observatório →</button></div><header class="carl-site-header"><div class="carl-header-identity"><strong>TANGRAM EDUCATIVO <span style="color:#91b8d7">/ CARL</span></strong><span class="carl-header-author">Professor João Faustino Junior</span></div><small>EXPLORADOR ESPACIAL</small></header>
 <nav class="carl-navigation" id="carl-navigation" aria-label="Áreas do observatório">
 <button type="button" data-view="astros" aria-selected="true">✦ Astros</button>
 <button type="button" data-view="solar" aria-selected="false">☀ Sistema Solar</button>
@@ -1282,55 +1281,4 @@ share.addEventListener('click',async()=>{const data={title:'CARL — Explorador 
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 if(!('onbeforeinstallprompt'in window)){install.hidden=false;install.textContent='↓ Como instalar';}
 })();
-</script><script>(()=>{const overlay=document.getElementById('carl-cinematic'),skip=document.getElementById('cin-skip'),enter=document.getElementById('cin-enter'),replay=document.getElementById('carl-replay'),place=document.getElementById('cin-place'),coords=document.getElementById('cin-coords'),chapter=document.getElementById('cin-chapter'),title=document.getElementById('cin-title');let timeout=null,lastFocus=null,stageTimers=[];const stages=[[0,'JABOTI · PARANÁ','23,74° S · 50,07° O','BRASIL · AMÉRICA DO SUL',''],[3000,'PARANÁ','BRASIL','AMÉRICA DO SUL',''],[5500,'BRASIL','AMÉRICA DO SUL','TERRA',''],[8000,'AMÉRICA DO SUL','PLANETA TERRA','TERRA',''],[10800,'SISTEMA SOLAR','EXPLORAÇÃO ESPACIAL','VOYAGER',''],[14200,'VIA LÁCTEA','NOSSA GALÁXIA','VIA LÁCTEA','']];function clearStages(){stageTimers.forEach(clearTimeout);stageTimers=[]}function updateStage(s){place.textContent=s[1];coords.textContent=s[2];chapter.textContent='';title.textContent=''}const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;function close(){clearTimeout(timeout);clearStages();overlay.hidden=true;document.body.style.overflow='';try{sessionStorage.setItem('carl-intro-seen','1')}catch(e){}if(lastFocus&&lastFocus.isConnected)lastFocus.focus()}function open(){lastFocus=document.activeElement;clearStages();updateStage(stages[0]);overlay.hidden=false;document.body.style.overflow='hidden';enter.hidden=!reduced;skip.hidden=reduced;overlay.querySelectorAll('.cin-stars,.cin-galaxy,.cin-earth,.cin-location,.cin-caption,.cin-final,.cin-voyager,.cin-progress span').forEach(el=>{el.style.animation='none';void el.offsetWidth;el.style.animation=''});skip.focus();clearTimeout(timeout);if(!reduced)stages.slice(1).forEach(s=>stageTimers.push(setTimeout(()=>updateStage(s),s[0])));if(!reduced)timeout=setTimeout(()=>{skip.hidden=true;enter.hidden=false;enter.focus()},18000)}skip.addEventListener('click',close);enter.addEventListener('click',close);replay.addEventListener('click',open);overlay.addEventListener('keydown',e=>{if(e.key==='Escape')close();if(e.key==='Tab'){e.preventDefault();(enter.hidden?skip:enter).focus()}});let seen=false;try{seen=sessionStorage.getItem('carl-intro-seen')==='1'}catch(e){}if(!seen)open()})();</script><script type="module">
-/* Terra tridimensional: texturas fotográficas públicas da NASA, servidas pela galeria Three.js.
-   Se WebGL, a rede ou o dispositivo falharem, a Terra CSS existente permanece visível. */
-const overlay=document.getElementById('carl-cinematic'),canvas=document.getElementById('cin-earth-3d'),globe=canvas?.closest('.cin-globe');
-if(overlay&&canvas&&globe&&window.WebGLRenderingContext){
- let renderer,raf=0,earth,marker,ready=false;
- try{
-  const THREE=await import('https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js');
-  const scene=new THREE.Scene();
-  const camera=new THREE.PerspectiveCamera(37,1,.1,100);camera.position.z=4.15;
-  renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:'low-power',preserveDrawingBuffer:false});
-  renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.5));renderer.setSize(512,512,false);
-  renderer.outputColorSpace=THREE.SRGBColorSpace;
-  scene.add(new THREE.AmbientLight(0xb7d5ff,1.05));
-  const sunlight=new THREE.DirectionalLight(0xfff5e9,2.4);sunlight.position.set(-2,1.5,4);scene.add(sunlight);
-  const group=new THREE.Group();scene.add(group);
-  const loader=new THREE.TextureLoader();loader.setCrossOrigin('anonymous');
-  const tex=await loader.loadAsync('https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg');
-  tex.colorSpace=THREE.SRGBColorSpace;tex.anisotropy=Math.min(4,renderer.capabilities.getMaxAnisotropy());
-  const geometry=new THREE.SphereGeometry(1.43,64,48);
-  const material=new THREE.MeshPhongMaterial({map:tex,shininess:10,specular:0x182c41});
-  earth=new THREE.Mesh(geometry,material);group.add(earth);
-  // Luzes noturnas reais: sobreposição emissiva de baixa intensidade, sem ícones artificiais.
-  loader.load('https://threejs.org/examples/textures/planets/earth_lights_2048.png',night=>{
-    night.colorSpace=THREE.SRGBColorSpace;
-    material.emissive=new THREE.Color(0x8fbfff);
-    material.emissiveMap=night;material.emissiveIntensity=.55;material.needsUpdate=true;
-  },undefined,()=>{});
-  const atmosphere=new THREE.Mesh(new THREE.SphereGeometry(1.47,48,32),new THREE.MeshBasicMaterial({color:0x4e9bda,transparent:true,opacity:.085,side:THREE.BackSide,depthWrite:false}));group.add(atmosphere);
-  // Referência geográfica aproximada; não representa luzes visíveis de Jaboti.
-  const lat=-23.74*Math.PI/180,lon=-50.07*Math.PI/180,r=1.46;
-  const dot=new THREE.Mesh(new THREE.SphereGeometry(.013,12,8),new THREE.MeshBasicMaterial({color:0xd3f3ff}));
-  dot.position.set(-r*Math.cos(lat)*Math.sin(lon),r*Math.sin(lat),r*Math.cos(lat)*Math.cos(lon));earth.add(dot);
-  // A esfera abre com o hemisfério sul-americano voltado à câmera.
-  earth.rotation.y=-.9;
-  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function draw(t){
-   if(!overlay.hidden){
-    const s=Math.min(1,Math.max(0,(performance.now()-start)/18000));
-    if(!reduce){earth.rotation.y=-.9+s*.7;earth.rotation.x=-.08+s*.07;}
-    renderer.render(scene,camera);
-   }
-   raf=requestAnimationFrame(draw);
-  }
-  let start=performance.now();
-  const replay=document.getElementById('carl-replay');
-  replay?.addEventListener('click',()=>{start=performance.now()});
-  globe.classList.add('cin-3d-ready');ready=true;draw();
-  document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAnimationFrame(raf)}else if(ready){start=performance.now();draw()}});
- }catch(e){try{renderer?.dispose()}catch(_){}}
-}
-</script></body></html>
+</script><script>(()=>{const cover=document.getElementById('carl-cinematic'),enter=document.getElementById('cin-enter'),replay=document.getElementById('carl-replay');if(!cover||!enter)return;let previous=null;function close(){cover.hidden=true;document.body.style.overflow='';try{sessionStorage.setItem('carl-intro-seen','1')}catch(e){}if(previous&&previous.isConnected)previous.focus()}function open(){previous=document.activeElement;cover.hidden=false;document.body.style.overflow='hidden';enter.focus()}enter.addEventListener('click',close);replay?.addEventListener('click',open);cover.addEventListener('keydown',e=>{if(e.key==='Escape')close();if(e.key==='Tab'){e.preventDefault();enter.focus()}});let seen=false;try{seen=sessionStorage.getItem('carl-intro-seen')==='1'}catch(e){}if(!seen)open()})();</script></body></html>
