@@ -143,6 +143,15 @@ main{max-width:1040px;padding:25px 12px 65px}
 .info{padding-top:8px}
 .info h2{color:#fff8e9}
 @media(max-width:600px){main{padding:20px 10px 55px}.stage{height:clamp(350px,54vh,520px)}.hero-image{width:min(91vw,510px);height:min(91vw,510px);max-height:51vh}.stage-tip{font-size:11px}.tile{flex-basis:96px}}
+
+/* Integração de fotografia espacial: preto do arquivo funde-se com o céu. */
+.stage.photo-space .hero-image{mix-blend-mode:screen;filter:drop-shadow(0 0 30px #6e9dc026);-webkit-mask-image:radial-gradient(ellipse 67% 67% at center,#000 70%,#000d 81%,transparent 99%);mask-image:radial-gradient(ellipse 67% 67% at center,#000 70%,#000d 81%,transparent 99%)}
+.stage.photo-space{perspective:1000px}
+.stage.photo-space .hero-image{transform:rotateY(var(--tilt-x,0deg)) rotateX(var(--tilt-y,0deg));transition:transform .8s ease,filter .8s ease;animation:cosmosFloat 16s ease-in-out infinite}
+.stage.photo-space .hero-image.zoom{transform:scale(1.25) rotateY(var(--tilt-x,0deg)) rotateX(var(--tilt-y,0deg))}
+@keyframes cosmosFloat{0%,100%{translate:0 0}50%{translate:0 -11px}}
+.stage.photo-space:after{content:"";position:absolute;inset:12% 6%;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at center,#386f9c22,transparent 70%);filter:blur(26px)}
+@media(prefers-reduced-motion:reduce){.stage.photo-space .hero-image{animation:none;transform:none!important;translate:none!important}}
 </style></head>
 <body><header><strong>TANGRAM EDUCATIVO <span style="color:#91b8d7">/ CARL</span></strong><small>EXPLORADOR DO COSMOS</small></header>
 <main><div class="eyebrow">CARL · OBSERVATÓRIO INTERATIVO</div><h1>O Universo em números.</h1><p>Contemple. Escolha um corpo celeste. Descubra sua matemática.</p>
@@ -209,7 +218,7 @@ function attachImageFallback(img,id){img.onerror=()=>{img.onerror=null;img.onloa
 function updateImageCredit(b){const el=$('image-credit'),m=verifiedMedia[b.id];el.replaceChildren();if(!m){el.textContent=b.id==='estrela_neutrons'?'Visualização didática de um pulsar: núcleo, feixes de emissão e campo magnético estilizados; não é fotografia direta.':'Ilustração didática · não é uma fotografia direta. A aparência é uma interpretação visual do conceito.';return}const type=document.createElement('span');type.className='image-type';type.textContent=m.type;const credit=document.createElement('span');credit.textContent=m.credit+' · ';const a=document.createElement('a');a.href=m.source;a.target='_blank';a.rel='noopener noreferrer';a.textContent='Fonte e créditos';el.append(type,credit,a)}
 function renderCarousel(){const nav=$('carousel');nav.replaceChildren();currentList().forEach(b=>{const btn=document.createElement('button');btn.className='tile';if(b.id==='estrela_neutrons')btn.classList.add('is-pulsar-tile');btn.type='button';btn.dataset.id=b.id;btn.setAttribute('aria-label','Selecionar '+b.n);btn.setAttribute('aria-pressed',String(selected===b.id));const img=document.createElement('img');img.alt='';img.loading='lazy';attachImageFallback(img,b.id);img.src=imageUrl(b);const label=document.createElement('span');label.textContent=b.n;btn.title=b.n+' · '+imageCategory(b);btn.append(img);if(b.id==='estrela_neutrons'){const thumb=document.createElement('span');thumb.className='pulsar-thumb';thumb.setAttribute('aria-hidden','true');thumb.innerHTML='<span class="beam"></span><span class="beam other"></span>';btn.append(thumb)}btn.append(label);btn.onclick=()=>select(b.id);nav.append(btn)})}
 function centerTile(){const tile=[...$('carousel').children].find(x=>x.dataset.id===selected);if(tile)tile.scrollIntoView({block:'nearest',inline:'center',behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth'})}
-function select(id){const b=bodies.find(x=>x.id===id);if(!b)return;selected=id;$('stage').classList.toggle('is-pulsar',id==='estrela_neutrons');$('hero').classList.remove('zoom');attachImageFallback($('hero'),b.id);$('hero').alt=(verifiedMedia[b.id]?'Imagem científica de ':'Ilustração artística: ')+b.n;updateImageCredit(b);$('hero').src=imageUrl(b);$('name').textContent=b.n;$('kind').textContent=b.kind;$('summary').textContent=b.desc;[...$('carousel').children].forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.id===id)));centerTile();renderInfo(b)}
+function select(id){const b=bodies.find(x=>x.id===id);if(!b)return;selected=id;$('stage').classList.toggle('is-pulsar',id==='estrela_neutrons');$('stage').classList.toggle('photo-space',id==='terra');$('stage').style.setProperty('--tilt-x','0deg');$('stage').style.setProperty('--tilt-y','0deg');$('hero').classList.remove('zoom');attachImageFallback($('hero'),b.id);$('hero').alt=(verifiedMedia[b.id]?'Imagem científica de ':'Ilustração artística: ')+b.n;updateImageCredit(b);$('hero').src=imageUrl(b);$('name').textContent=b.n;$('kind').textContent=b.kind;$('summary').textContent=b.desc;[...$('carousel').children].forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.id===id)));centerTile();renderInfo(b)}
 function addStat(parent,label,value,html=false){const row=document.createElement('div');row.className='stat';const a=document.createElement('span'),v=document.createElement('strong');a.textContent=label;if(html)v.innerHTML=value;else v.textContent=value;row.append(a,v);parent.append(row)}
 const representationDetails={
 ana_branca:'Uma anã branca é extremamente pequena e pouco luminosa quando comparada a uma estrela como o Sol. Imagens que mostram um grande disco brilhante costumam ser representações artísticas.',
@@ -378,4 +387,20 @@ async function toggleCosmosSound(){
 }
 document.getElementById('cosmos-sound').addEventListener('click',toggleCosmosSound);
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&cosmosSoundOn)toggleCosmosSound()});
+</script><script>
+/* Perspectiva discreta para ponteiro; gestos de deslizar no celular permanecem livres. */
+(function setupPerspective(){
+ const stage=document.getElementById('stage');
+ stage.addEventListener('pointermove',e=>{
+  if(e.pointerType!=='mouse'||!stage.classList.contains('photo-space')||matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  const r=stage.getBoundingClientRect();
+  const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+  stage.style.setProperty('--tilt-x',(x*7).toFixed(2)+'deg');
+  stage.style.setProperty('--tilt-y',(-y*5).toFixed(2)+'deg');
+ });
+ stage.addEventListener('pointerleave',()=>{
+  stage.style.setProperty('--tilt-x','0deg');
+  stage.style.setProperty('--tilt-y','0deg');
+ });
+})();
 </script></body></html>
