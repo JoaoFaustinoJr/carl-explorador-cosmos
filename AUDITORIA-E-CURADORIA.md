@@ -41,3 +41,12 @@ Data: 10/11/2026. Escopo: inspeção estática do código publicado no repositó
 ## Critério para declarar versão final homologada
 
 A homologação exige: ausência de erros bloqueantes em dispositivos-alvo, fontes científicas verificadas, áudio e navegação com comportamento previsível, acessibilidade mínima testada e política de privacidade adequada ao contexto escolar.
+
+## Continuação da auditoria — revisão 2 (10/11/2026)
+
+- Corrigido o foco inicial da abertura e o retorno do foco ao botão de rever a apresentação quando o usuário a pula por teclado.
+- Atualizada a identificação do cache PWA de v4 para v5, forçando renovação do conjunto básico de arquivos na ativação do service worker.
+- Inspecionadas constantes científicas do código: unidade astronômica `149597870.7 km`, velocidade da luz no vácuo `299792.458 km/s`, ano-luz `9.4607304725808e12 km` e constante gravitacional `6.67430e-11` em SI. Os valores são compatíveis com referências usuais; isso **não** valida automaticamente todos os resultados ou modelos.
+- Pendente verificar URL, origem e licença da fotografia atribuída ao cometa Halley, além de outras imagens externas. Não substituir arquivos sem referência verificada.
+- Pendente validar comportamento do áudio externo quando o navegador bloqueia autoplay ou a URL deixa de funcionar.
+- Pendente teste manual em Android/Chromebook/desktop e validação com leitores de tela; não declarar testes concluídos sem execução.
