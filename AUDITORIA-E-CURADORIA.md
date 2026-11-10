@@ -50,3 +50,11 @@ A homologação exige: ausência de erros bloqueantes em dispositivos-alvo, font
 - Pendente verificar URL, origem e licença da fotografia atribuída ao cometa Halley, além de outras imagens externas. Não substituir arquivos sem referência verificada.
 - Pendente validar comportamento do áudio externo quando o navegador bloqueia autoplay ou a URL deixa de funcionar.
 - Pendente teste manual em Android/Chromebook/desktop e validação com leitores de tela; não declarar testes concluídos sem execução.
+
+## Encerramento da curadoria de código — revisão 3 (10/11/2026)
+
+- Fonte NASA Photojournal **PIA17485** conferida: representa imagem processada do núcleo do cometa Halley a partir de dados da missão Giotto de 1986. O texto no aplicativo foi precisado para não sugerir uma fotografia óptica convencional sem processamento. Fonte: https://science.nasa.gov/photojournal/comet-halley/.
+- Acrescentada informação breve de transparência sobre Google Analytics e geolocalização opcional no rodapé. Isso não substitui uma política de privacidade completa ou análise jurídica da LGPD.
+- A etapa de **curadoria estática e correções conservadoras de código** está encerrada. Não foram executados testes automatizados de ponta a ponta nem testes em dispositivos reais, nem foram confirmados todos os URLs remotos e direitos de mídia. Por isso a homologação funcional permanece pendente.
+- Risco remanescente importante: a narração é servida por URL externa de pré-visualização, que pode expirar. Se falhar, a abertura ainda permite pular e encerra após 11 segundos. Para publicação duradoura, hospedar mídia com licença e autorização verificadas.
+- Recomendação: registrar testes manuais com data, navegador, dispositivo e resultado antes de declarar versão estável final para uso em escala.
