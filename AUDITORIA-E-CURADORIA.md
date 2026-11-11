@@ -58,3 +58,11 @@ A homologação exige: ausência de erros bloqueantes em dispositivos-alvo, font
 - A etapa de **curadoria estática e correções conservadoras de código** está encerrada. Não foram executados testes automatizados de ponta a ponta nem testes em dispositivos reais, nem foram confirmados todos os URLs remotos e direitos de mídia. Por isso a homologação funcional permanece pendente.
 - Risco remanescente importante: a narração é servida por URL externa de pré-visualização, que pode expirar. Se falhar, a abertura ainda permite pular e encerra após 11 segundos. Para publicação duradoura, hospedar mídia com licença e autorização verificadas.
 - Recomendação: registrar testes manuais com data, navegador, dispositivo e resultado antes de declarar versão estável final para uso em escala.
+
+## Curadoria visual ampliada — 10/11/2026
+
+- **Astros:** catálogo já inclui imagens observacionais com créditos e ilustrações didáticas alternativas; não substituir ilustrações por fotografias sem identificação de origem.
+- **Via Láctea:** os seis marcadores (Sistema Solar, centro galáctico, Nebulosa de Órion, Nebulosa de Carina, Braço de Perseu, disco galáctico) agora exibem contextualização visual e referência. Carina utiliza imagem astronômica externa; Perseu e os demais utilizam esquemas explicitamente identificados como não fotográficos.
+- **História e missões:** já há imagens e consulta de fallback ao Wikimedia Commons, mas buscas automáticas por palavras-chave podem retornar imagens de assunto diferente. Antes de ampliar, conferir individualmente pertinência, autoria, licença e estabilidade do endereço.
+- **Próximas oportunidades:** fotografias observacionais verificadas de M42 (Órion), regiões do centro galáctico, comparação em escala de estrelas, objetos de céu profundo, instrumentos históricos e cada missão espacial.
+- **Limitações:** links e arquivos externos dependem de conexão; esta revisão de código não comprova visualização em todos os aparelhos nem autorizações de reutilização de cada arquivo externo.
