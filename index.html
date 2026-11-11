@@ -608,7 +608,7 @@ footer .carl-app-actions #carl-install-hint{text-align:left;color:#b6c8d5}
 .carl-author-signature{display:flex;align-items:center;justify-content:center;gap:13px;max-width:520px;margin:23px auto 13px;padding:15px 17px;border-top:1px solid #7896ac50;border-bottom:1px solid #7896ac30;text-align:left}.carl-author-mark{width:54px;height:54px;flex:none;object-fit:cover;border-radius:12px}.carl-author-copy{display:flex;flex-direction:column;gap:3px}.carl-author-family{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#a6c7df}.carl-author-copy strong{font-size:15px;letter-spacing:.02em;color:#f2f6fa}.carl-author-copy small{font-size:11px;color:#a7bbcd}.carl-author-signature a{color:inherit;text-decoration:none}.carl-author-signature a:hover{text-decoration:underline}@media(max-width:380px){.carl-author-mark{width:44px;height:44px}.carl-author-signature{padding:12px 8px;gap:9px}}
 .carl-music-toggle{border:1px solid #9ab6cd55;border-radius:999px;background:#0c2335;color:#d5e5f2;font:500 11px system-ui,sans-serif;padding:6px 9px;cursor:pointer;white-space:nowrap}.carl-music-toggle[aria-pressed="true"]{border-color:#d5b875;color:#f8e5b8}.carl-music-toggle:focus-visible{outline:2px solid #f5ce86;outline-offset:3px}@media(max-width:600px){.carl-header-end>small{display:none}.carl-music-toggle{font-size:10px;padding:5px 7px}}
 </style></head>
-<body><div id="carl-cinematic" class="carl-cinematic carl-static-cover" role="dialog" aria-modal="true" aria-label="CARL — Explorador Espacial" hidden><img class="carl-cover-image" src="assets/carl/CARL_Explorador_Espacial_icone.png" alt="CARL — Explorador Espacial: Terra vista do espaço, com o nome do aplicativo"><a class="carl-cover-portal" href="https://joaofaustinojr.github.io/-portal-de-projetos/">← Portal de Projetos</a><button type="button" id="cin-narrate" class="carl-cover-enter" aria-label="Ouvir narração de abertura">▶ Ouvir narração</button><button type="button" id="cin-enter" class="carl-cover-enter">Pular abertura →</button><audio id="carl-intro-audio" preload="none" src="https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/7e77be37-4cc1-41db-9082-2803a2e28452.mp3"></audio></div><header class="carl-site-header"><div class="carl-header-identity"><strong>TANGRAM EDUCATIVO <span style="color:#91b8d7">/ CARL</span></strong><span class="carl-header-author">Professor João Faustino Junior</span></div><div class="carl-header-end"><button type="button" id="carl-music-toggle" class="carl-music-toggle" aria-pressed="false" title="Ativar trilha instrumental original">♫ Trilha</button><small>EXPLORADOR ESPACIAL</small><div class="carl-flags" aria-label="Idiomas"><span class="carl-flag-current" role="img" aria-label="Português do Brasil" title="Português do Brasil">🇧🇷</span><span class="carl-flag-future" role="img" aria-label="Inglês em preparação" title="Versão em inglês em preparação">🇺🇸</span></div></div></header>
+<body><div id="carl-cinematic" class="carl-cinematic carl-static-cover" role="dialog" aria-modal="true" aria-label="CARL — Explorador Espacial" hidden><img class="carl-cover-image" src="assets/carl/CARL_Explorador_Espacial_icone.png" alt="CARL — Explorador Espacial: Terra vista do espaço, com o nome do aplicativo"><a class="carl-cover-portal" href="https://joaofaustinojr.github.io/-portal-de-projetos/">← Portal de Projetos</a><button type="button" id="cin-narrate" class="carl-cover-enter" aria-label="Ouvir narração de abertura">▶ Ouvir narração</button><button type="button" id="cin-enter" class="carl-cover-enter">Pular abertura →</button><audio id="carl-intro-audio" preload="none" src="https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/7e77be37-4cc1-41db-9082-2803a2e28452.mp3"></audio></div><header class="carl-site-header"><div class="carl-header-identity"><strong>TANGRAM EDUCATIVO <span style="color:#91b8d7">/ CARL</span></strong><span class="carl-header-author">Professor João Faustino Junior</span></div><div class="carl-header-end"><small>EXPLORADOR ESPACIAL</small><div class="carl-flags" aria-label="Idiomas"><span class="carl-flag-current" role="img" aria-label="Português do Brasil" title="Português do Brasil">🇧🇷</span><span class="carl-flag-future" role="img" aria-label="Inglês em preparação" title="Versão em inglês em preparação">🇺🇸</span></div></div></header>
 <nav class="carl-navigation" id="carl-navigation" aria-label="Áreas do observatório">
 <button type="button" data-view="astros" aria-selected="true">✦ Astros</button>
 <button type="button" data-view="solar" aria-selected="false">☀ Sistema Solar</button>
@@ -618,7 +618,7 @@ footer .carl-app-actions #carl-install-hint{text-align:left;color:#b6c8d5}
 <button type="button" data-view="history" aria-selected="false">◷ História do céu</button>
 <button type="button" data-view="missions" aria-selected="false">🚀 Exploração espacial</button>
 </nav><div class="carl-view-controls" aria-label="Navegação entre áreas"><button type="button" id="view-prev" aria-label="Área anterior">‹</button><div class="view-position" aria-live="polite" id="view-position">Astros<small>1 de 7</small></div><button type="button" id="view-next" aria-label="Próxima área">›</button></div><main><div class="carl-intro"><div class="eyebrow">CARL · OBSERVATÓRIO INTERATIVO</div><h1>O Universo em números.</h1><p>Explore o Cosmos.</p></div>
-<div class="cosmos-audio-bar"><button class="cosmos-sound" id="cosmos-sound" type="button" aria-pressed="false" aria-label="Ativar som ambiente do Cosmos">♫ Som</button><span class="cosmos-audio-note">Paisagem sonora sintetizada · não é som captado no espaço</span></div><div class="stage" id="stage"><div class="stars"></div><div class="compact-art white-dwarf" aria-hidden="true"><div class="dwarf-aura"></div><div class="dwarf-star"></div></div><div class="compact-art comet" aria-hidden="true"><div class="comet-tail"></div><div class="comet-tail dust"></div><div class="comet-coma"></div><div class="comet-core"></div></div><div class="pulsar-art" aria-hidden="true"><div class="pulsar-halo"></div><div class="pulsar-field"></div><div class="pulsar-field second"></div><div class="pulsar-beam up"></div><div class="pulsar-beam down"></div><div class="pulsar-core"></div></div><img id="hero" class="hero-image" src="assets/carl/terra.png" alt="Ilustração artística da Terra"><span class="stage-tip">Toque na imagem para ampliar · Deslize para mudar</span></div>
+<div class="cosmos-audio-bar"><button class="cosmos-sound" id="cosmos-sound" type="button" aria-pressed="false" aria-label="Ativar som ambiente do Cosmos">♫ Som</button><span class="cosmos-audio-note">Trilha e efeitos originais sintetizados · não são sons captados no espaço</span></div><div class="stage" id="stage"><div class="stars"></div><div class="compact-art white-dwarf" aria-hidden="true"><div class="dwarf-aura"></div><div class="dwarf-star"></div></div><div class="compact-art comet" aria-hidden="true"><div class="comet-tail"></div><div class="comet-tail dust"></div><div class="comet-coma"></div><div class="comet-core"></div></div><div class="pulsar-art" aria-hidden="true"><div class="pulsar-halo"></div><div class="pulsar-field"></div><div class="pulsar-field second"></div><div class="pulsar-beam up"></div><div class="pulsar-beam down"></div><div class="pulsar-core"></div></div><img id="hero" class="hero-image" src="assets/carl/terra.png" alt="Ilustração artística da Terra"><span class="stage-tip">Toque na imagem para ampliar · Deslize para mudar</span></div>
 <div id="image-credit" class="image-credit" aria-live="polite"></div><div class="filters" id="filters" aria-label="Categorias de objetos"></div>
 <div class="carousel"><button id="prev" class="arrow" aria-label="Anterior">‹</button><nav id="carousel" aria-label="Carrossel de corpos celestes"></nav><button id="next" class="arrow" aria-label="Próximo">›</button></div>
 <section class="info"><div class="eyebrow" id="kind"></div><h2 id="name">Terra</h2><p id="summary" class="summary"></p><button id="open" class="primary" aria-expanded="false" aria-controls="details">Explorar números e descobertas <span aria-hidden="true">⌄</span></button>
@@ -854,43 +854,7 @@ function selectGalactic(id){const p=galacticPlaces.find(x=>x.id===id);if(!p)retu
 })();
 
 </script><script>
-/* Som do Cosmos: síntese original, discreta, ativada somente por gesto do usuário. */
-let cosmosAudio=null,cosmosSoundOn=false;
-async function toggleCosmosSound(){
- const button=document.getElementById('cosmos-sound');
- if(!cosmosSoundOn){
-  try{
-   const AudioContextType=window.AudioContext||window.webkitAudioContext;
-   if(!AudioContextType)throw new Error('Web Audio indisponível');
-   if(!cosmosAudio){
-    const ctx=new AudioContextType(),master=ctx.createGain();
-    master.gain.value=0;master.connect(ctx.destination);
-    const voices=[110,164.81,220,329.63];
-    const oscillators=voices.map((freq,i)=>{
-      const osc=ctx.createOscillator(),g=ctx.createGain(),filter=ctx.createBiquadFilter();
-      osc.type=i%2?'sine':'triangle';osc.frequency.value=freq;
-      filter.type='lowpass';filter.frequency.value=1100;
-      g.gain.value=[.19,.13,.10,.075][i];
-      osc.connect(filter);filter.connect(g);g.connect(master);osc.start();return osc;
-    });
-    const lfo=ctx.createOscillator(),lfoGain=ctx.createGain();
-    lfo.frequency.value=.075;lfoGain.gain.value=.035;
-    lfo.connect(lfoGain);lfoGain.connect(master.gain);lfo.start();
-    cosmosAudio={ctx,master,oscillators,lfo};
-   }
-   await cosmosAudio.ctx.resume();
-   cosmosAudio.master.gain.cancelScheduledValues(cosmosAudio.ctx.currentTime);
-   cosmosAudio.master.gain.setTargetAtTime(.48,cosmosAudio.ctx.currentTime,.35);
-   cosmosSoundOn=true;button.setAttribute('aria-pressed','true');button.textContent='♫ Som ligado';
-  }catch(e){button.textContent='Áudio indisponível neste navegador';button.disabled=true}
- }else{
-  cosmosAudio.master.gain.cancelScheduledValues(cosmosAudio.ctx.currentTime);
-  cosmosAudio.master.gain.setTargetAtTime(0,cosmosAudio.ctx.currentTime,.35);
-  cosmosSoundOn=false;button.setAttribute('aria-pressed','false');button.textContent='♫ Som';
- }
-}
-document.getElementById('cosmos-sound').addEventListener('click',toggleCosmosSound);
-document.addEventListener('visibilitychange',()=>{if(document.hidden&&cosmosSoundOn)toggleCosmosSound()});
+/* Som integrado à Sinfonia do Cosmos. */
 </script><script>
 /* Perspectiva discreta para ponteiro; gestos de deslizar no celular permanecem livres. */
 (function setupPerspective(){
@@ -1290,45 +1254,23 @@ if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serv
 if(!('onbeforeinstallprompt'in window)){install.hidden=false;install.textContent='↓ Como instalar';}
 })();
 </script><script>(()=>{const cover=document.getElementById('carl-cinematic'),enter=document.getElementById('cin-enter'),replay=document.getElementById('carl-replay'),narrate=document.getElementById('cin-narrate'),audio=document.getElementById('carl-intro-audio');if(!cover||!enter)return;let timer=null;function close(){clearTimeout(timer);if(audio){audio.pause();audio.currentTime=0}cover.hidden=true;document.body.style.overflow='';if(replay&&document.activeElement===enter)replay.focus({preventScroll:true})}function open(){clearTimeout(timer);cover.hidden=false;document.body.style.overflow='hidden';enter.focus({preventScroll:true});if(narrate){narrate.hidden=false;narrate.textContent='▶ Ouvir narração'}timer=setTimeout(close,11000);if(audio){audio.currentTime=0;audio.play().then(()=>{if(narrate)narrate.textContent='♫ Narração em andamento'}).catch(()=>{if(narrate)narrate.textContent='▶ Ouvir narração'})}}narrate?.addEventListener('click',()=>{if(!audio)return;audio.play().then(()=>{narrate.textContent='♫ Narração em andamento'}).catch(()=>{narrate.textContent='Áudio indisponível'})});audio?.addEventListener('ended',close);enter.addEventListener('click',close);replay?.addEventListener('click',open);cover.addEventListener('keydown',e=>{if(e.key==='Escape')close()});open()})();</script><script>
-/* Sinfonia do Cosmos — trilha ORIGINAL sintetizada localmente, ativada por gesto. */
+/* Sinfonia do Cosmos: composição original procedural, som unificado. */
 (()=>{'use strict';
-const button=document.getElementById('carl-music-toggle');
-const AC=window.AudioContext||window.webkitAudioContext;
-if(!button||!AC){if(button)button.hidden=true;return}
-let ctx,master,pad=[],timer=null,playing=false,step=0,melodyStep=0;
-const chords=[[130.81,196,261.63,392],[110,164.81,220,329.63],[98,146.83,196,293.66],[116.54,174.61,233.08,349.23]];
-const melody=[0,2,3,2,1,2,3,4,3,2,1,0,2,1,0,-1];
-function setup(){
- ctx=new AC();master=ctx.createGain();master.gain.value=0;master.connect(ctx.destination);
- const gains=[0.22,0.14,0.085,0.055];
- for(let i=0;i<4;i++){const o=ctx.createOscillator(),g=ctx.createGain(),filter=ctx.createBiquadFilter();
- o.type=i===2?'triangle':'sine';o.frequency.value=chords[0][i];
- filter.type='lowpass';filter.frequency.value=i===2?1250:1900;
- g.gain.value=gains[i];o.connect(filter);filter.connect(g);g.connect(master);o.start();pad.push(o)}
-}
-function note(freq,volume=0.20,duration=1.8){
- if(!ctx||!playing)return;
- const t=ctx.currentTime,o=ctx.createOscillator(),g=ctx.createGain();
- o.type='sine';o.frequency.setValueAtTime(freq,t);
- g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(volume,t+.09);
- g.gain.exponentialRampToValueAtTime(0.0001,t+duration);
- o.connect(g);g.connect(master);o.start(t);o.stop(t+duration+.05);
-}
-function tick(){
- if(!playing||!ctx)return;
- const now=ctx.currentTime,bar=Math.floor(step/8)%chords.length;
- const c=chords[bar];
- if(step%8===0)pad.forEach((o,i)=>o.frequency.setTargetAtTime(c[i],now,1.7));
- const degree=melody[melodyStep++%melody.length];
- if(degree>=0){const scale=[1,1.125,1.25,1.3333,1.5];note(c[0]*4*scale[degree],0.18,1.5)}
- if(step%4===0)note(c[0]*2,0.12,2.8);
- step++;
-}
-function volume(){if(!ctx||!master)return;const narration=document.getElementById('carl-intro-audio');const duck=narration&&!narration.paused;const v=playing&&!document.hidden?(duck?0.10:0.52):0;master.gain.setTargetAtTime(v,ctx.currentTime,.5)}
-function label(){button.setAttribute('aria-pressed',String(playing));button.textContent=playing?'♫ Música ligada':'♫ Música';button.title=playing?'Desligar música do CARL':'Ligar música original Sinfonia do Cosmos'}
-button.addEventListener('click',async()=>{try{if(!ctx)setup();await ctx.resume();playing=!playing;if(playing){tick();timer=setInterval(tick,1750)}else{clearInterval(timer);timer=null}volume();label()}catch(e){button.textContent='♫ Indisponível'}});
+const button=document.getElementById('cosmos-sound'),AC=window.AudioContext||window.webkitAudioContext;
+if(!button||!AC)return;
+let ctx,master,pad=[],timer,playing=false,step=0;
+const chords=[[130.81,164.81,196,261.63],[110,146.83,164.81,220],[98,123.47,146.83,196],[116.54,146.83,174.61,233.08]],scale=[1,1.125,1.25,1.3333,1.5,1.6667],melody=[0,2,4,3,2,1,2,4,5,4,2,1,0,2,3,1];
+function init(){ctx=new AC();master=ctx.createGain();master.gain.value=0;master.connect(ctx.destination);for(let i=0;i<4;i++){const o=ctx.createOscillator(),g=ctx.createGain();o.type=i===1?'triangle':'sine';o.frequency.value=chords[0][i];g.gain.value=[.15,.07,.07,.045][i];o.connect(g);g.connect(master);o.start();pad.push(o)}}
+function note(f,v,d,type='sine'){if(!playing)return;const t=ctx.currentTime,o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.035);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(master);o.start(t);o.stop(t+d+.05)}
+function tick(){if(!playing)return;const c=chords[Math.floor(step/16)%4];if(step%16===0)pad.forEach((o,i)=>o.frequency.setTargetAtTime(c[i],ctx.currentTime,1.1));note(c[0]*2*scale[[0,2,1,3,0,4,2,1][step%8]],.12,.32,'triangle');if(step%2===0)note(c[0]*4*scale[melody[Math.floor(step/2)%16]],.18,.85);if(step%4===0)note(c[0]/2,.16,1.1);step++}
+function volume(){if(!ctx)return;const a=document.getElementById('carl-intro-audio'),duck=a&&!a.paused&&!a.ended;master.gain.setTargetAtTime(playing&&!document.hidden?(duck?.12:.45):0,ctx.currentTime,.45)}
+function label(){button.setAttribute('aria-pressed',String(playing));button.textContent=playing?'♫ Som ligado':'♫ Som';button.setAttribute('aria-label',playing?'Desligar trilha e sons':'Ligar trilha e sons')}
+async function start(){if(playing)return;try{if(!ctx)init();await ctx.resume();playing=true;tick();timer=setInterval(tick,577);volume();label()}catch(e){button.title='Áudio bloqueado: toque novamente'}}
+function stop(){playing=false;clearInterval(timer);volume();label()}
+button.addEventListener('click',()=>playing?stop():start());
 document.addEventListener('visibilitychange',volume);
-const audio=document.getElementById('carl-intro-audio');if(audio)for(const event of ['play','pause','ended'])audio.addEventListener(event,volume);
+const narration=document.getElementById('carl-intro-audio');if(narration)for(const e of ['play','pause','ended'])narration.addEventListener(e,volume);
+document.addEventListener('pointerdown',e=>{if(!playing&&!e.target.closest('#cosmos-sound'))start()},{once:true});
 label();
 })();
 </script></body></html>
