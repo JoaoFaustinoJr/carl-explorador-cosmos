@@ -938,8 +938,8 @@ if(id==='outer'){caption.textContent='Disco da Via Láctea · representação di
   for(const r of [79,158])make('circle',{cx:250,cy:250,r,fill:'none',stroke:'#8da9bf28'});
   for(let a=0;a<360;a+=45){const t=a*rad;make('line',{x1:250,y1:250,x2:250-237*Math.sin(t),y2:250-237*Math.cos(t),stroke:'#a2b7ca18'})}
   [['N',250,18],['S',250,494],['L',9,254],['O',491,254]].forEach(([s,x,y])=>make('text',{x,y,'text-anchor':'middle',fill:'#e4c080','font-size':15},s));
-  const dateInput=document.getElementById('sky-date');const [yy,mm,dd]=dateInput.value.split('-').map(Number);const now=new Date(yy,mm-1,dd,Number(hourEl.value),0,0,0);document.getElementById('sky-hour-label').textContent=hourEl.value.padStart(2,'0')+'h';const jd=now.getTime()/86400000+2440587.5,gmst=(18.697374558+24.06570982441908*(jd-2451545))%24,lst=((gmst+lon/15)%24+24)%24;
-  let visible=0;const positions=new Map();
+  const dateInput=document.getElementById('sky-date');const [yy,mm,dd]=dateInput.value.split('-').map(Number);const now=new Date(Date.UTC(yy,mm-1,dd,Number(hourEl.value)+3,0,0,0));document.getElementById('sky-hour-label').textContent=hourEl.value.padStart(2,'0')+'h';const jd=now.getTime()/86400000+2440587.5,gmst=(18.697374558+24.06570982441908*(jd-2451545))%24,lst=((gmst+lon/15)%24+24)%24;
+  let visible=0;const positions=new Map();const labels=[];const reserved=[];const placeLabel=(name,x,y,kind)=>{const size=kind==='const'?10:10.5,w=name.length*size*.56+7,h=14;const options=[[9,-10],[-w-9,-10],[9,15],[-w-9,15],[0,-18],[-w/2,22]];for(const [dx,dy] of options){const px=x+dx,py=y+dy;if(px<16||px+w>484||py-h<18||py>480)continue;const rect=[px-3,py-h,px+w+3,py+3];if(reserved.some(r=>!(rect[2]<r[0]||rect[0]>r[2]||rect[3]<r[1]||rect[1]>r[3])))continue;reserved.push(rect);labels.push({name,x:px,y:py,kind});return true}return false};
   for(const [name,ra,dec,mag] of stars){
    const ha=((lst-ra+12)%24+24)%24-12,H=ha*15*rad,d=dec*rad,l=lat*rad;
    const sinAlt=Math.sin(d)*Math.sin(l)+Math.cos(d)*Math.cos(l)*Math.cos(H);
@@ -947,11 +947,11 @@ if(id==='outer'){caption.textContent='Disco da Via Láctea · representação di
    const az=Math.atan2(-Math.sin(H)*Math.cos(d),Math.sin(d)*Math.cos(l)-Math.cos(d)*Math.sin(l)*Math.cos(H));
    const r=(Math.PI/2-alt)/(Math.PI/2)*237,x=250-r*Math.sin(az),y=250-r*Math.cos(az);
    positions.set(name,[x,y]);make('circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:Math.max(4,8-mag).toFixed(1),fill:'url(#carl-star-glow)',opacity:.42});make('circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:Math.max(1.4,3.5-mag*.6).toFixed(1),fill:mag<.5?'#fff0cb':'#cde4ff',opacity:.95});
-   if(mag<.8)make('line',{x1:x-5,y1:y,x2:x+5,y2:y,stroke:'#fff5d6',opacity:.45,'stroke-width':.6});if(document.getElementById('sky-labels').checked&&mag<1.4)make('text',{x:(x+7).toFixed(1),y:(y-6).toFixed(1),fill:'#e6edf7','font-size':11},name);
+   if(mag<.8)make('line',{x1:x-5,y1:y,x2:x+5,y2:y,stroke:'#fff5d6',opacity:.45,'stroke-width':.6});if(document.getElementById('sky-labels').checked&&mag<1.4)placeLabel(name,x,y,'star');
    visible++;
   }
-  if(constEl.checked){for(const [title,segments] of links){let first=null;for(const [a,b] of segments){const pa=positions.get(a),pb=positions.get(b);if(!pa||!pb)continue;make('line',{x1:pa[0],y1:pa[1],x2:pb[0],y2:pb[1],class:'constellation-line'});first=first||pa}if(first)make('text',{x:Math.min(450,first[0]+12),y:Math.max(22,first[1]-14),fill:'#d4c8ef','font-size':11},title)}}
-  document.getElementById('sky-time').textContent=now.toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})+' · '+visible+' estrelas de referência visíveis';
+  if(constEl.checked){for(const [title,segments] of links){let first=null;for(const [a,b] of segments){const pa=positions.get(a),pb=positions.get(b);if(!pa||!pb)continue;make('line',{x1:pa[0],y1:pa[1],x2:pb[0],y2:pb[1],class:'constellation-line'});first=first||pa}if(first)placeLabel(title,first[0],first[1],'const')}}for(const l of labels)make('text',{x:l.x.toFixed(1),y:l.y.toFixed(1),fill:l.kind==='const'?'#d6c6f0':'#edf3fb','font-size':l.kind==='const'?10:10.5,'paint-order':'stroke',stroke:'#071627','stroke-width':2.5,'stroke-linejoin':'round'},l.name);
+  document.getElementById('sky-time').textContent=new Date(Date.UTC(yy,mm-1,dd,Number(hourEl.value))).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short',timeZone:'UTC'})+' · '+visible+' estrelas de referência visíveis';
  }
  const latEl=document.getElementById('sky-lat'),lonEl=document.getElementById('sky-lon');
  function refresh(){const lat=Number(latEl.value),lon=Number(lonEl.value);if(!Number.isFinite(lat)||!Number.isFinite(lon)||Math.abs(lat)>90||Math.abs(lon)>180){document.getElementById('sky-status').textContent='Confira latitude e longitude';return}draw(lat,lon);document.getElementById('sky-status').textContent=(document.getElementById('sky-city').value==='jaboti'?'Jaboti · Paraná · Brasil · ':'Carta para ')+lat.toFixed(2)+'°, '+lon.toFixed(2)+'°'}
