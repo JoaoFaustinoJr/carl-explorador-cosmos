@@ -656,6 +656,8 @@ footer .carl-app-actions #carl-install-hint{text-align:left;color:#b6c8d5}
 #carl-earth-3d>summary{position:relative;z-index:1;width:fit-content;margin:0 0 0 auto;padding:10px 14px;border:1px solid #54769c;border-radius:10px;background:#172c47;color:#edf5ff;cursor:pointer}
 #carl-earth-3d[open]>summary{position:absolute;top:8px;right:8px}
 #solar-globe{margin:10px 0}#solar-globe>summary{cursor:pointer;color:#f2d394}#solar-globe .globe-title{font-size:1rem}#solar-globe[hidden],#solar-globe [hidden]{display:none!important}
+#stage:has(#carl-earth-3d[open]:not([hidden])) :is(.compact-art,.pulsar-art){display:none!important}
+#carousel .tile img{object-fit:contain;border-radius:12px}
 #terra-carl-dia-noite .globe-title{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
 #terra-carl-dia-noite [hidden]{display:none!important}
 :is(#terra-carl-dia-noite,.carl-globe-controls) article{max-width:620px;margin:auto;padding:42px 4px 8px;color:#edf5ff;background:transparent;font-family:system-ui,sans-serif}
@@ -1652,12 +1654,32 @@ const canvas=root.querySelector('canvas'), ctx=canvas.getContext('2d'), status=r
 const frame=ctx.createImageData(420,360), points=new Map();
 let bodyId="terra", filename="", requestId=0;
 const files={sol:"sun",mercurio:"mercury",venus:"venus_atmosphere",marte:"mars",jupiter:"jupiter",saturno:"saturn",urano:"uranus",netuno:"neptune",lua:"moon"};
+const models={
+ exoplaneta:{color:[145,105,205],note:'Exoplaneta hipotético · cores e nuvens ilustrativas.'},
+ cometa:{color:[122,111,99],note:'Núcleo cometário esquemático · a cauda aponta para longe do Sol.'},
+ ana_branca:{color:[225,238,255],note:'Anã branca esquemática · brilho ampliado para facilitar a observação.'},
+ estrela_neutrons:{color:[112,192,238],note:'Estrela de nêutrons esquemática · os feixes representam um pulsar.'}
+};
+const modelNote=document.createElement('p');
+modelNote.hidden=true;
+root.querySelector('article').append(modelNote);
+function modelTexture(model){
+ const map=ctx.createImageData(256,128);
+ for(let y=0;y<128;y++)for(let x=0;x<256;x++){
+  const u=x*Math.PI/128,v=y*Math.PI/128;
+  const wave=Math.sin(v*19+1.6*Math.sin(u*3))+0.55*Math.sin(u*7+v*13)+.23*Math.cos(u*19-v*31);
+  const i=4*(y*256+x), contrast=bodyId==='cometa'?33:bodyId==='exoplaneta'?21:6;
+  for(let c=0;c<3;c++)map.data[i+c]=model.color[c]+wave*contrast;
+  map.data[i+3]=255;
+ }
+ return map;
+}
 let lon=.65, lat=-.25, zoom=1, texture, nightTexture, night=false, pending=false;
 function render(){
  pending=false;
  if(!texture && !(night && nightTexture))return;
  const map=night && nightTexture ? nightTexture : texture;
- const dst=frame.data, src=map.data, radius=(bodyId==="saturno"?94:144)*zoom, cl=Math.cos(lat), sl=Math.sin(lat);
+ const dst=frame.data, src=map.data, radius=(bodyId==="saturno"?94:bodyId==="cometa"?64:144)*zoom, cl=Math.cos(lat), sl=Math.sin(lat);
  dst.fill(0);
  for(let y=0;y<360;y++){
   const ny=(180-y)/radius;
@@ -1672,13 +1694,25 @@ function render(){
       continue;
     }
    }
-   if(rr>1)continue;
+   if(rr>1){
+    const i=4*(y*420+x);
+    if(bodyId==='cometa' && nx<-.55){
+     const spread=.22-.12*nx;
+     const alpha=Math.exp(-Math.pow(ny/spread,2))*Math.exp(nx*.56);
+     dst.set([131,180,220,Math.round(155*alpha)],i);
+    }
+    if(bodyId==='estrela_neutrons'){
+     const beam=Math.abs(nx*Math.cos(lon)+ny*.65), reach=Math.sqrt(rr);
+     if(reach<2.2 && beam<.12*reach)dst.set([111,204,255,Math.round(135*(2.2-reach)/1.2)],i);
+    }
+    continue;
+   }
    const z=Math.sqrt(1-rr), north=ny*cl+z*sl, front=z*cl-ny*sl;
    const u=(Math.atan2(nx,front)+lon)/(2*Math.PI)+.5;
    const tx=Math.floor((u-Math.floor(u))*map.width);
    const ty=Math.min(map.height-1,Math.floor((.5-Math.asin(Math.max(-1,Math.min(1,north)))/Math.PI)*map.height));
    const j=4*(ty*map.width+tx), i=4*(y*420+x);
-   const light=(night && nightTexture) || bodyId==="sol" ? 1 : .38+.72*Math.max(0,-.43*nx+.42*ny+.79*z), rim=(bodyId==="terra"?.45:0)*(1-z)**3;
+   const light=(night && nightTexture) || bodyId==="sol" || bodyId==="ana_branca" || bodyId==="estrela_neutrons" ? 1 : .38+.72*Math.max(0,-.43*nx+.42*ny+.79*z), rim=(bodyId==="terra"?.45:0)*(1-z)**3;
    dst[i]=src[j]*light+44*rim;
    dst[i+1]=src[j+1]*light+122*rim;
    dst[i+2]=src[j+2]*light+245*rim;
@@ -1728,6 +1762,12 @@ canvas.addEventListener('wheel',e=>{e.preventDefault();update(0,0,Math.exp(-e.de
 const credit=root.querySelector('[data-globe-credit]');
 function loadTexture(){
  if(!panel.open || panel.hidden || texture)return;
+ if(models[bodyId]){
+  texture=modelTexture(models[bodyId]);
+  status.hidden=true;
+  update();
+  return;
+ }
  const current=++requestId;
  const image=new Image();
  image.crossOrigin='anonymous';
@@ -1758,7 +1798,10 @@ panel.addEventListener('carl-globe-select',({detail})=>{
  filename=files[bodyId];
  const earth=bodyId==='terra';
  requestId++;
- panel.hidden=!earth && !filename;
+ const model=primary && models[bodyId];
+ panel.hidden=!earth && !filename && !model;
+ modelNote.hidden=!model;
+ modelNote.textContent=model?model.note:'';
  panel.open=primary && !panel.hidden;
  root.querySelector('h2').textContent=detail.n+' em 3D';
  canvas.setAttribute('aria-label','Globo interativo de '+detail.n);
