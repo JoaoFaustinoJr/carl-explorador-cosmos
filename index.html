@@ -650,8 +650,9 @@ footer .carl-app-actions #carl-install-hint{text-align:left;color:#b6c8d5}
 <div class="cosmos-audio-bar"><button class="cosmos-sound" id="cosmos-sound" type="button" aria-pressed="false" aria-label="Ativar som ambiente do Cosmos">♫ Som</button><span class="cosmos-audio-note">Trilha e efeitos originais sintetizados · não são sons captados no espaço</span></div><div class="stage" id="stage"><div class="stars"></div><div class="compact-art white-dwarf" aria-hidden="true"><div class="dwarf-aura"></div><div class="dwarf-star"></div></div><div class="compact-art comet" aria-hidden="true"><div class="comet-tail"></div><div class="comet-tail dust"></div><div class="comet-coma"></div><div class="comet-core"></div></div><div class="pulsar-art" aria-hidden="true"><div class="pulsar-halo"></div><div class="pulsar-field"></div><div class="pulsar-field second"></div><div class="pulsar-beam up"></div><div class="pulsar-beam down"></div><div class="pulsar-core"></div></div><img id="hero" class="hero-image" src="assets/carl/terra.png" alt="Ilustração artística da Terra"><span class="stage-tip">Toque na imagem para ampliar · Deslize para mudar</span></div>
 <div id="image-credit" class="image-credit" aria-live="polite"></div><div class="filters" id="filters" aria-label="Categorias de objetos"></div>
 <div class="carousel"><button id="prev" class="arrow" aria-label="Anterior">‹</button><nav id="carousel" aria-label="Carrossel de corpos celestes"></nav><button id="next" class="arrow" aria-label="Próximo">›</button></div>
-<section class="info"><div class="eyebrow" id="kind"></div><h2 id="name">Terra</h2><p id="summary" class="summary"></p><details id="carl-earth-3d" hidden><summary>Girar em 3D · Dia e noite</summary><div id="terra-carl-dia-noite">
+<section class="info"><div class="eyebrow" id="kind"></div><h2 id="name">Terra</h2><p id="summary" class="summary"></p><details id="carl-earth-3d"><summary>Girar em 3D · Dia e noite</summary><div id="terra-carl-dia-noite">
 <style>
+#carl-earth-3d{margin:12px 0}#carl-earth-3d>summary{width:fit-content;padding:10px 14px;border:1px solid #54769c;border-radius:10px;background:#172c47;color:#edf5ff;cursor:pointer}#carl-earth-3d[open]>summary{margin-bottom:10px}
 #terra-carl-dia-noite article{max-width:620px;margin:auto;padding:16px;color:#edf5ff;background:#0a1427;border-radius:18px;font-family:system-ui,sans-serif}
 #terra-carl-dia-noite h2{margin:4px 0 0}
 #terra-carl-dia-noite canvas{display:block;width:min(100%,420px);margin:auto;touch-action:none;cursor:grab;background:radial-gradient(ellipse,#142847,transparent 70%)}
@@ -1137,94 +1138,7 @@ const moonPhotos={'Lua':['https://commons.wikimedia.org/wiki/Special:FilePath/Fu
  const coord=(Math.abs(lat).toFixed(3)+'° '+(lat<0?'S':'N')+' · '+Math.abs(lon).toFixed(3)+'° '+(lon<0?'O':'L'));
  const esc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const title='CARL · Carta Celeste';
- win.document.write('<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>'+esc(title+' · '+formattedDate)+'</title><style>*{box-sizing:border-box}body{font-family:Georgia,serif;text-align:center;background:#061426;color:#f2e2be;padding:25px;margin:0}.sheet{max-width:780px;margin:auto;border:1px solid #b99b65;border-radius:20px;padding:24px;background:radial-gradient(circle at 50% 40%,#15324b,#061426 75%)}.eyebrow{letter-spacing:.24em;color:#c7aa78;font:12px Arial,sans-serif}h1{font-size:30px;margin:10px 0 5px}.place{font-size:19px;margin:12px 0 5px}.details{font:14px Arial,sans-serif;color:#c9d7e5;line-height:1.8}.details b{color:#f2e2be}svg{width:min(100%,620px);height:auto;display:block;margin:10px auto}.foot{font:12px Arial,sans-serif;color:#c3b99d;line-height:1.7}@page{size:A4 portrait;margin:12mm}@media print{body{padding:0;background:#061426!important;print-color-adjust:exact;-webkit-print-color-adjust:exact}.sheet{border-radius:0;min-height:265mm;padding:16px}svg{max-height:175mm}}</style></head><body><article class="sheet"><div class="eyebrow">TANGRAM EDUCATIVO · OBSERVATÓRIO CARL</div><h1>O céu de uma noite especial</h1><div class="place">'+esc(city)+'</div><div class="details"><b>Data:</b> '+esc(formattedDate)+' &nbsp; <b>Horário local:</b> '+esc(time)+'<div><b>Coordenadas:</b> '+esc(coord)+'</div></div>'+exportSvg()+'<div class="foot">Norte acima · Leste à esquerda · Zênite ao centro<br>Carta didática com estrelas de referência e constelações simplificadas.<br>Com carinho: JFJr</div></article><script>
-(() => {
-const root=document.getElementById('terra-carl-dia-noite'), canvas=root.querySelector('canvas'), ctx=canvas.getContext('2d'), status=root.querySelector('[role=status]');
-const frame=ctx.createImageData(420,360), image=new Image(), points=new Map();
-let lon=-.92, lat=-.25, zoom=1, texture, nightTexture, night=false, pending=false;
-function render(){
- pending=false;
- if(!texture && !(night && nightTexture))return;
- const map=night && nightTexture ? nightTexture : texture;
- const dst=frame.data, src=map.data, radius=144*zoom, cl=Math.cos(lat), sl=Math.sin(lat);
- dst.fill(0);
- for(let y=0;y<360;y++){
-  const ny=(180-y)/radius;
-  for(let x=0;x<420;x++){
-   const nx=(x-210)/radius, rr=nx*nx+ny*ny;
-   if(rr>1)continue;
-   const z=Math.sqrt(1-rr), north=ny*cl+z*sl, front=z*cl-ny*sl;
-   const u=(Math.atan2(nx,front)+lon)/(2*Math.PI)+.5;
-   const tx=Math.floor((u-Math.floor(u))*map.width);
-   const ty=Math.min(map.height-1,Math.floor((.5-Math.asin(Math.max(-1,Math.min(1,north)))/Math.PI)*map.height));
-   const j=4*(ty*map.width+tx), i=4*(y*420+x);
-   const light=night && nightTexture ? 1 : .38+.72*Math.max(0,-.43*nx+.42*ny+.79*z), rim=.45*(1-z)**3;
-   dst[i]=src[j]*light+44*rim;
-   dst[i+1]=src[j+1]*light+122*rim;
-   dst[i+2]=src[j+2]*light+245*rim;
-   dst[i+3]=255*Math.min(1,(1-Math.sqrt(rr))*radius);
-  }
- }
- ctx.putImageData(frame,0,0);
-}
-function update(dx=0,dy=0,scale=1){
- lon=(lon+dx)%(2*Math.PI);
- lat=Math.max(-Math.PI/2,Math.min(Math.PI/2,lat+dy));
- zoom=Math.max(.7,Math.min(2.6,zoom*scale));
- if(!pending){pending=true;requestAnimationFrame(render);}
-}
-const nightButton=root.querySelector('[data-a="night"]');
-const nightImage=new Image();
-nightImage.crossOrigin="anonymous";
-nightImage.onload=()=>{
- const map=document.createElement("canvas");
- map.width=nightImage.naturalWidth;map.height=nightImage.naturalHeight;
- const context=map.getContext("2d");
- context.drawImage(nightImage,0,0);
- nightTexture=context.getImageData(0,0,map.width,map.height);
- if(night){status.hidden=true;update();}
-};
-nightImage.onerror=()=>{if(night){night=false;nightButton.setAttribute("aria-pressed","false");nightButton.textContent="Noite";status.hidden=false;status.textContent="A imagem noturna não carregou.";}};
-const actions={night:()=>{
- night=!night;nightButton.setAttribute("aria-pressed",String(night));nightButton.textContent=night?"Dia":"Noite";
- status.hidden=!night || Boolean(nightTexture);
- if(night && !nightTexture){status.textContent="Carregando a vista noturna…";nightImage.src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/textures/planets/earth_lights_2048.png";}
- update();
-},left:()=>update(-.34),right:()=>update(.34),up:()=>update(0,.27),down:()=>update(0,-.27),out:()=>update(0,0,1/1.2),in:()=>update(0,0,1.2),home:()=>{lon=-.92;lat=-.25;zoom=1;update();}};
-root.querySelectorAll('button').forEach(button=>button.onclick=actions[button.dataset.a]);
-canvas.onpointerdown=e=>{canvas.setPointerCapture(e.pointerId);points.set(e.pointerId,[e.clientX,e.clientY]);};
-canvas.onpointermove=e=>{
- const previous=points.get(e.pointerId);
- if(!previous)return;
- const other=[...points].find(([id])=>id!==e.pointerId)?.[1];
- points.set(e.pointerId,[e.clientX,e.clientY]);
- if(other){
-  const distance=Math.hypot(previous[0]-other[0],previous[1]-other[1]);
-  if(distance>0)update(0,0,Math.hypot(e.clientX-other[0],e.clientY-other[1])/distance);
- }else update((previous[0]-e.clientX)*.009,(e.clientY-previous[1])*.009);
-};
-canvas.onpointerup=canvas.onpointercancel=canvas.onlostpointercapture=e=>points.delete(e.pointerId);
-canvas.addEventListener('wheel',e=>{e.preventDefault();update(0,0,Math.exp(-e.deltaY*.002));},{passive:false});
-image.crossOrigin='anonymous';
-image.onload=()=>{
- const map=document.createElement('canvas');
- map.width=image.naturalWidth;map.height=image.naturalHeight;
- const mapCtx=map.getContext('2d');
- mapCtx.drawImage(image,0,0);
- texture=mapCtx.getImageData(0,0,map.width,map.height);
- if(!night || nightTexture)status.hidden=true;update();
-};
-image.onerror=()=>{if(night && nightTexture)return;status.hidden=false;status.textContent='O mapa da Terra não carregou.';};
-const panel=document.getElementById('carl-earth-3d');
-panel.addEventListener('toggle',()=>{
-if(!panel.open || texture)return;
-status.hidden=false;
-status.textContent='Carregando o mapa da Terra…';
-image.src='https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/textures/planets/earth_atmos_2048.jpg';
-});
-})();
-</script>
-</body></html>');
+ win.document.write('<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>'+esc(title+' · '+formattedDate)+'</title><style>*{box-sizing:border-box}body{font-family:Georgia,serif;text-align:center;background:#061426;color:#f2e2be;padding:25px;margin:0}.sheet{max-width:780px;margin:auto;border:1px solid #b99b65;border-radius:20px;padding:24px;background:radial-gradient(circle at 50% 40%,#15324b,#061426 75%)}.eyebrow{letter-spacing:.24em;color:#c7aa78;font:12px Arial,sans-serif}h1{font-size:30px;margin:10px 0 5px}.place{font-size:19px;margin:12px 0 5px}.details{font:14px Arial,sans-serif;color:#c9d7e5;line-height:1.8}.details b{color:#f2e2be}svg{width:min(100%,620px);height:auto;display:block;margin:10px auto}.foot{font:12px Arial,sans-serif;color:#c3b99d;line-height:1.7}@page{size:A4 portrait;margin:12mm}@media print{body{padding:0;background:#061426!important;print-color-adjust:exact;-webkit-print-color-adjust:exact}.sheet{border-radius:0;min-height:265mm;padding:16px}svg{max-height:175mm}}</style></head><body><article class="sheet"><div class="eyebrow">TANGRAM EDUCATIVO · OBSERVATÓRIO CARL</div><h1>O céu de uma noite especial</h1><div class="place">'+esc(city)+'</div><div class="details"><b>Data:</b> '+esc(formattedDate)+' &nbsp; <b>Horário local:</b> '+esc(time)+'<div><b>Coordenadas:</b> '+esc(coord)+'</div></div>'+exportSvg()+'<div class="foot">Norte acima · Leste à esquerda · Zênite ao centro<br>Carta didática com estrelas de referência e constelações simplificadas.<br>Com carinho: JFJr</div></article></body></html>');
  win.document.close();win.focus();setTimeout(()=>win.print(),450);
 });
 })();
@@ -1645,4 +1559,91 @@ const narration=document.getElementById('carl-intro-audio');if(narration)for(con
 document.addEventListener('pointerdown',e=>{if(!playing&&!e.target.closest('#cosmos-sound'))start()},{once:true});
 label();
 })();
-</script></body></html>
+</script><script>
+(() => {
+const root=document.getElementById('terra-carl-dia-noite'), canvas=root.querySelector('canvas'), ctx=canvas.getContext('2d'), status=root.querySelector('[role=status]');
+const frame=ctx.createImageData(420,360), image=new Image(), points=new Map();
+let lon=-.92, lat=-.25, zoom=1, texture, nightTexture, night=false, pending=false;
+function render(){
+ pending=false;
+ if(!texture && !(night && nightTexture))return;
+ const map=night && nightTexture ? nightTexture : texture;
+ const dst=frame.data, src=map.data, radius=144*zoom, cl=Math.cos(lat), sl=Math.sin(lat);
+ dst.fill(0);
+ for(let y=0;y<360;y++){
+  const ny=(180-y)/radius;
+  for(let x=0;x<420;x++){
+   const nx=(x-210)/radius, rr=nx*nx+ny*ny;
+   if(rr>1)continue;
+   const z=Math.sqrt(1-rr), north=ny*cl+z*sl, front=z*cl-ny*sl;
+   const u=(Math.atan2(nx,front)+lon)/(2*Math.PI)+.5;
+   const tx=Math.floor((u-Math.floor(u))*map.width);
+   const ty=Math.min(map.height-1,Math.floor((.5-Math.asin(Math.max(-1,Math.min(1,north)))/Math.PI)*map.height));
+   const j=4*(ty*map.width+tx), i=4*(y*420+x);
+   const light=night && nightTexture ? 1 : .38+.72*Math.max(0,-.43*nx+.42*ny+.79*z), rim=.45*(1-z)**3;
+   dst[i]=src[j]*light+44*rim;
+   dst[i+1]=src[j+1]*light+122*rim;
+   dst[i+2]=src[j+2]*light+245*rim;
+   dst[i+3]=255*Math.min(1,(1-Math.sqrt(rr))*radius);
+  }
+ }
+ ctx.putImageData(frame,0,0);
+}
+function update(dx=0,dy=0,scale=1){
+ lon=(lon+dx)%(2*Math.PI);
+ lat=Math.max(-Math.PI/2,Math.min(Math.PI/2,lat+dy));
+ zoom=Math.max(.7,Math.min(2.6,zoom*scale));
+ if(!pending){pending=true;requestAnimationFrame(render);}
+}
+const nightButton=root.querySelector('[data-a="night"]');
+const nightImage=new Image();
+nightImage.crossOrigin="anonymous";
+nightImage.onload=()=>{
+ const map=document.createElement("canvas");
+ map.width=nightImage.naturalWidth;map.height=nightImage.naturalHeight;
+ const context=map.getContext("2d");
+ context.drawImage(nightImage,0,0);
+ nightTexture=context.getImageData(0,0,map.width,map.height);
+ if(night){status.hidden=true;update();}
+};
+nightImage.onerror=()=>{if(night){night=false;nightButton.setAttribute("aria-pressed","false");nightButton.textContent="Noite";status.hidden=false;status.textContent="A imagem noturna não carregou.";}};
+const actions={night:()=>{
+ night=!night;nightButton.setAttribute("aria-pressed",String(night));nightButton.textContent=night?"Dia":"Noite";
+ status.hidden=!night || Boolean(nightTexture);
+ if(night && !nightTexture){status.textContent="Carregando a vista noturna…";nightImage.src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/textures/planets/earth_lights_2048.png";}
+ update();
+},left:()=>update(-.34),right:()=>update(.34),up:()=>update(0,.27),down:()=>update(0,-.27),out:()=>update(0,0,1/1.2),in:()=>update(0,0,1.2),home:()=>{lon=-.92;lat=-.25;zoom=1;update();}};
+root.querySelectorAll('button').forEach(button=>button.onclick=actions[button.dataset.a]);
+canvas.onpointerdown=e=>{canvas.setPointerCapture(e.pointerId);points.set(e.pointerId,[e.clientX,e.clientY]);};
+canvas.onpointermove=e=>{
+ const previous=points.get(e.pointerId);
+ if(!previous)return;
+ const other=[...points].find(([id])=>id!==e.pointerId)?.[1];
+ points.set(e.pointerId,[e.clientX,e.clientY]);
+ if(other){
+  const distance=Math.hypot(previous[0]-other[0],previous[1]-other[1]);
+  if(distance>0)update(0,0,Math.hypot(e.clientX-other[0],e.clientY-other[1])/distance);
+ }else update((previous[0]-e.clientX)*.009,(e.clientY-previous[1])*.009);
+};
+canvas.onpointerup=canvas.onpointercancel=canvas.onlostpointercapture=e=>points.delete(e.pointerId);
+canvas.addEventListener('wheel',e=>{e.preventDefault();update(0,0,Math.exp(-e.deltaY*.002));},{passive:false});
+image.crossOrigin='anonymous';
+image.onload=()=>{
+ const map=document.createElement('canvas');
+ map.width=image.naturalWidth;map.height=image.naturalHeight;
+ const mapCtx=map.getContext('2d');
+ mapCtx.drawImage(image,0,0);
+ texture=mapCtx.getImageData(0,0,map.width,map.height);
+ if(!night || nightTexture)status.hidden=true;update();
+};
+image.onerror=()=>{if(night && nightTexture)return;status.hidden=false;status.textContent='O mapa da Terra não carregou.';};
+const panel=document.getElementById('carl-earth-3d');
+panel.addEventListener('toggle',()=>{
+if(!panel.open || texture)return;
+status.hidden=false;
+status.textContent='Carregando o mapa da Terra…';
+image.src='https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/textures/planets/earth_atmos_2048.jpg';
+});
+})();
+</script>
+</body></html>
