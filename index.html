@@ -667,7 +667,7 @@ footer .carl-app-actions #carl-install-hint{text-align:left;color:#b6c8d5}
 <nav aria-label="Controles do globo">
 <button type="button" data-a="night" aria-pressed="false">Noite</button>
 <button type="button" data-a="left" aria-label="Girar à esquerda">←</button><button type="button" data-a="right" aria-label="Girar à direita">→</button><button type="button" data-a="up" aria-label="Inclinar para cima">↑</button><button type="button" data-a="down" aria-label="Inclinar para baixo">↓</button><button type="button" data-a="out" aria-label="Reduzir zoom">−</button><button type="button" data-a="in" aria-label="Aumentar zoom">+</button><button type="button" data-a="home">Brasil</button>
-</nav><p role="status">Carregando o mapa da Terra…</p></article>
+</nav><p data-globe-credit hidden>Mapas adaptados de <a href="https://www.solarsystemscope.com/textures/">Solar System Scope</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></p><p role="status">Carregando o mapa da Terra…</p></article>
 </div></details>
 <button id="open" class="primary" aria-expanded="false" aria-controls="details">Explorar números e descobertas <span aria-hidden="true">⌄</span></button>
 <div class="details" id="details" hidden><div class="tabs" id="tabs" aria-label="Informações do astro"><button data-pane="facts" aria-pressed="true">Dados</button><button data-pane="curiosities" aria-pressed="false">Descobertas</button><button data-pane="math" aria-pressed="false">Matemática</button><button data-pane="compare" aria-pressed="false">Comparar</button></div>
@@ -760,7 +760,7 @@ function attachImageFallback(img,id){img.onerror=()=>{img.onerror=null;img.onloa
 function updateImageCredit(b){const el=$('image-credit'),m=verifiedMedia[b.id];el.replaceChildren();if(!m){el.textContent=b.id==='estrela_neutrons'?'Visualização didática de um pulsar: núcleo, feixes de emissão e campo magnético estilizados; não é fotografia direta.':'Ilustração didática · não é uma fotografia direta. A aparência é uma interpretação visual do conceito.';return}const type=document.createElement('span');type.className='image-type';type.textContent=m.type;const credit=document.createElement('span');credit.textContent=m.credit+' · ';const a=document.createElement('a');a.href=m.source;a.target='_blank';a.rel='noopener noreferrer';a.textContent='Fonte e créditos';el.append(type,credit,a)}
 function renderCarousel(){const nav=$('carousel');nav.replaceChildren();currentList().forEach(b=>{const btn=document.createElement('button');btn.className='tile';if(b.id==='estrela_neutrons')btn.classList.add('is-pulsar-tile');if(b.id==='ana_branca')btn.classList.add('is-dwarf-tile');if(b.id==='cometa')btn.classList.add('is-comet-tile');btn.type='button';btn.dataset.id=b.id;btn.setAttribute('aria-label','Selecionar '+b.n);btn.setAttribute('aria-pressed',String(selected===b.id));const img=document.createElement('img');img.alt='';img.loading='lazy';attachImageFallback(img,b.id);img.src=imageUrl(b);const label=document.createElement('span');label.textContent=b.n;btn.title=b.n+' · '+imageCategory(b);btn.append(img);if(b.id==='estrela_neutrons'){const thumb=document.createElement('span');thumb.className='pulsar-thumb';thumb.setAttribute('aria-hidden','true');thumb.innerHTML='<span class="beam"></span><span class="beam other"></span>';btn.append(thumb)}if(b.id==='ana_branca'||b.id==='cometa'){const thumb=document.createElement('span');thumb.className='compact-thumb '+(b.id==='ana_branca'?'dwarf':'comet');thumb.setAttribute('aria-hidden','true');btn.append(thumb)}btn.append(label);btn.onclick=()=>select(b.id);nav.append(btn)})}
 function centerTile(){const tile=[...$('carousel').children].find(x=>x.dataset.id===selected);if(tile)tile.scrollIntoView({block:'nearest',inline:'center',behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth'})}
-function select(id){const b=bodies.find(x=>x.id===id);if(!b)return;selected=id;const earth3d=$('carl-earth-3d');earth3d.hidden=id!=='terra';if(earth3d.hidden)earth3d.open=false;$('stage').classList.toggle('is-pulsar',id==='estrela_neutrons');$('stage').classList.toggle('is-white-dwarf',id==='ana_branca');$('stage').classList.toggle('is-comet',id==='cometa');$('stage').classList.toggle('photo-space',Boolean(verifiedMedia[id]) && !['buraco_negro','nebulosa','galaxia'].includes(id));$('stage').style.setProperty('--tilt-x','0deg');$('stage').style.setProperty('--tilt-y','0deg');$('hero').classList.remove('zoom');attachImageFallback($('hero'),b.id);$('hero').alt=(verifiedMedia[b.id]?'Imagem científica de ':'Ilustração artística: ')+b.n;updateImageCredit(b);$('hero').src=imageUrl(b);$('name').textContent=b.n;$('kind').textContent=b.kind;$('summary').textContent=b.desc;[...$('carousel').children].forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.id===id)));centerTile();renderInfo(b)}
+function select(id){const b=bodies.find(x=>x.id===id);if(!b)return;selected=id;const earth3d=$('carl-earth-3d');earth3d.dispatchEvent(new CustomEvent('carl-globe-select',{detail:b}));$('stage').classList.toggle('is-pulsar',id==='estrela_neutrons');$('stage').classList.toggle('is-white-dwarf',id==='ana_branca');$('stage').classList.toggle('is-comet',id==='cometa');$('stage').classList.toggle('photo-space',Boolean(verifiedMedia[id]) && !['buraco_negro','nebulosa','galaxia'].includes(id));$('stage').style.setProperty('--tilt-x','0deg');$('stage').style.setProperty('--tilt-y','0deg');$('hero').classList.remove('zoom');attachImageFallback($('hero'),b.id);$('hero').alt=(verifiedMedia[b.id]?'Imagem científica de ':'Ilustração artística: ')+b.n;updateImageCredit(b);$('hero').src=imageUrl(b);$('name').textContent=b.n;$('kind').textContent=b.kind;$('summary').textContent=b.desc;[...$('carousel').children].forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.id===id)));centerTile();renderInfo(b)}
 function addStat(parent,label,value,html=false){const row=document.createElement('div');row.className='stat';const a=document.createElement('span'),v=document.createElement('strong');a.textContent=label;if(html)v.innerHTML=value;else v.textContent=value;row.append(a,v);parent.append(row)}
 const representationDetails={
 ana_branca:'Uma anã branca é extremamente pequena e pouco luminosa quando comparada a uma estrela como o Sol. Imagens que mostram um grande disco brilhante costumam ser representações artísticas.',
@@ -1562,25 +1562,36 @@ label();
 </script><script>
 (() => {
 const root=document.getElementById('terra-carl-dia-noite'), canvas=root.querySelector('canvas'), ctx=canvas.getContext('2d'), status=root.querySelector('[role=status]');
-const frame=ctx.createImageData(420,360), image=new Image(), points=new Map();
-let lon=-.92, lat=-.25, zoom=1, texture, nightTexture, night=false, pending=false;
+const frame=ctx.createImageData(420,360), points=new Map();
+let bodyId="terra", filename="", requestId=0;
+const files={sol:"sun",mercurio:"mercury",venus:"venus_atmosphere",marte:"mars",jupiter:"jupiter",saturno:"saturn",urano:"uranus",netuno:"neptune",lua:"moon"};
+let lon=.65, lat=-.25, zoom=1, texture, nightTexture, night=false, pending=false;
 function render(){
  pending=false;
  if(!texture && !(night && nightTexture))return;
  const map=night && nightTexture ? nightTexture : texture;
- const dst=frame.data, src=map.data, radius=144*zoom, cl=Math.cos(lat), sl=Math.sin(lat);
+ const dst=frame.data, src=map.data, radius=(bodyId==="saturno"?94:144)*zoom, cl=Math.cos(lat), sl=Math.sin(lat);
  dst.fill(0);
  for(let y=0;y<360;y++){
   const ny=(180-y)/radius;
   for(let x=0;x<420;x++){
    const nx=(x-210)/radius, rr=nx*nx+ny*ny;
+   if(bodyId==="saturno"){
+    const plane=(ny+.22*nx)/Math.max(.055,.34+lat*.42);
+    const ring=Math.hypot(nx,plane);
+    if(ring>1.24 && ring<2.02 && (rr>1 || plane<0) && (ring<1.67 || ring>1.73)){
+      const i=4*(y*420+x), band=.82+.18*Math.cos(ring*74);
+      dst[i]=211*band;dst[i+1]=184*band;dst[i+2]=137*band;dst[i+3]=220;
+      continue;
+    }
+   }
    if(rr>1)continue;
    const z=Math.sqrt(1-rr), north=ny*cl+z*sl, front=z*cl-ny*sl;
    const u=(Math.atan2(nx,front)+lon)/(2*Math.PI)+.5;
    const tx=Math.floor((u-Math.floor(u))*map.width);
    const ty=Math.min(map.height-1,Math.floor((.5-Math.asin(Math.max(-1,Math.min(1,north)))/Math.PI)*map.height));
    const j=4*(ty*map.width+tx), i=4*(y*420+x);
-   const light=night && nightTexture ? 1 : .38+.72*Math.max(0,-.43*nx+.42*ny+.79*z), rim=.45*(1-z)**3;
+   const light=(night && nightTexture) || bodyId==="sol" ? 1 : .38+.72*Math.max(0,-.43*nx+.42*ny+.79*z), rim=(bodyId==="terra"?.45:0)*(1-z)**3;
    dst[i]=src[j]*light+44*rim;
    dst[i+1]=src[j+1]*light+122*rim;
    dst[i+2]=src[j+2]*light+245*rim;
@@ -1612,7 +1623,7 @@ const actions={night:()=>{
  status.hidden=!night || Boolean(nightTexture);
  if(night && !nightTexture){status.textContent="Carregando a vista noturna…";nightImage.src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/textures/planets/earth_lights_2048.png";}
  update();
-},left:()=>update(-.34),right:()=>update(.34),up:()=>update(0,.27),down:()=>update(0,-.27),out:()=>update(0,0,1/1.2),in:()=>update(0,0,1.2),home:()=>{lon=-.92;lat=-.25;zoom=1;update();}};
+},left:()=>update(-.34),right:()=>update(.34),up:()=>update(0,.27),down:()=>update(0,-.27),out:()=>update(0,0,1/1.2),in:()=>update(0,0,1.2),home:()=>{lon=bodyId==="terra"?.65:0;lat=bodyId==="terra"?-.25:0;zoom=1;update();}};
 root.querySelectorAll('button').forEach(button=>button.onclick=actions[button.dataset.a]);
 canvas.onpointerdown=e=>{canvas.setPointerCapture(e.pointerId);points.set(e.pointerId,[e.clientX,e.clientY]);};
 canvas.onpointermove=e=>{
@@ -1627,22 +1638,49 @@ canvas.onpointermove=e=>{
 };
 canvas.onpointerup=canvas.onpointercancel=canvas.onlostpointercapture=e=>points.delete(e.pointerId);
 canvas.addEventListener('wheel',e=>{e.preventDefault();update(0,0,Math.exp(-e.deltaY*.002));},{passive:false});
-image.crossOrigin='anonymous';
-image.onload=()=>{
- const map=document.createElement('canvas');
- map.width=image.naturalWidth;map.height=image.naturalHeight;
- const mapCtx=map.getContext('2d');
- mapCtx.drawImage(image,0,0);
- texture=mapCtx.getImageData(0,0,map.width,map.height);
- if(!night || nightTexture)status.hidden=true;update();
-};
-image.onerror=()=>{if(night && nightTexture)return;status.hidden=false;status.textContent='O mapa da Terra não carregou.';};
 const panel=document.getElementById('carl-earth-3d');
-panel.addEventListener('toggle',()=>{
-if(!panel.open || texture)return;
-status.hidden=false;
-status.textContent='Carregando o mapa da Terra…';
-image.src='https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/textures/planets/earth_atmos_2048.jpg';
+const credit=root.querySelector('[data-globe-credit]');
+function loadTexture(){
+ if(!panel.open || panel.hidden || texture)return;
+ const current=++requestId;
+ const image=new Image();
+ image.crossOrigin='anonymous';
+ status.hidden=false;
+ status.textContent='Carregando o mapa…';
+ image.onload=()=>{
+  if(current!==requestId)return;
+  const map=document.createElement('canvas');
+  map.width=image.naturalWidth;map.height=image.naturalHeight;
+  const mapCtx=map.getContext('2d');
+  mapCtx.drawImage(image,0,0);
+  texture=mapCtx.getImageData(0,0,map.width,map.height);
+  if(!night || nightTexture)status.hidden=true;
+  update();
+ };
+ image.onerror=()=>{if(current===requestId){status.hidden=false;status.textContent='O mapa não carregou. Feche e reabra o globo para tentar novamente.';}};
+ image.src=filename ? './assets/globes/'+filename+'.webp' : 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/textures/planets/earth_atmos_2048.jpg';
+}
+panel.addEventListener('toggle',loadTexture);
+panel.addEventListener('carl-globe-select',({detail})=>{
+ if(bodyId===detail.id)return;
+ bodyId=detail.id;
+ filename=files[bodyId];
+ const earth=bodyId==='terra';
+ requestId++;
+ panel.open=false;
+ panel.hidden=!earth && !filename;
+ panel.querySelector('summary').textContent=earth?'Girar em 3D · Dia e noite':'Girar em 3D';
+ root.querySelector('h2').textContent=detail.n+' em 3D';
+ canvas.setAttribute('aria-label','Globo interativo de '+detail.n);
+ credit.hidden=!filename;
+ night=false;
+ nightButton.hidden=!earth;
+ nightButton.textContent='Noite';
+ nightButton.setAttribute('aria-pressed','false');
+ root.querySelector('[data-a="home"]').textContent=earth?'Brasil':'Recentrar';
+ texture=null;
+ ctx.clearRect(0,0,420,360);
+ actions.home();
 });
 })();
 </script>
