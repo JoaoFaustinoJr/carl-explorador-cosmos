@@ -1408,7 +1408,7 @@ const mapOverlay=document.getElementById('carl-map-overlay'),mapDialog=document.
   img.addEventListener('error',()=>{const figure=img.closest('figure');if(figure)figure.hidden=true;});
  });
  const missionSupplementalMedia={
-  giotto:{url:'https://commons.wikimedia.org/wiki/Special:FilePath/Comet%20Halley%20Giotto%20image.jpg?width=900',credit:'ESA · Giotto · observações do cometa Halley (1986)',page:'https://www.esa.int/Science_Exploration/Space_Science/Giotto',kind:'Imagem científica do núcleo cometário'},
+  giotto:{url:'./assets/carl/halley-giotto-1986.webp',credit:'NASA / ESA / Giotto Project · PIA17485',page:'https://science.nasa.gov/photojournal/comet-halley/',kind:'Imagem do núcleo de Halley obtida pela sonda Giotto em 1986'},
 
   perseverance:{url:'https://commons.wikimedia.org/wiki/Special:FilePath/PIA24428-MarsPerseveranceRover-FirstSelfie-20210406.jpg?width=900',credit:'NASA / JPL-Caltech / MSSS · rover Perseverance em Marte (2021)',page:'https://science.nasa.gov/mission/mars-2020-perseverance/',kind:'Imagem de missão · Marte'},
   rosetta:{url:'https://commons.wikimedia.org/wiki/Special:FilePath/Comet_67P_on_19_September_2014_NavCam_mosaic.jpg?width=900',credit:'ESA / Rosetta / NAVCAM · cometa 67P (2014)',page:'https://www.esa.int/Science_Exploration/Space_Science/Rosetta',kind:'Imagem científica da missão Rosetta'},
@@ -1459,7 +1459,7 @@ const mapOverlay=document.getElementById('carl-map-overlay'),mapDialog=document.
  document.getElementById('mission-detail').insertBefore(photoBox,document.getElementById('mission-summary'));
  photo.addEventListener('error',async()=>{
   const key=photo.dataset.mission;
-  if(!key||photo.dataset.retried==='1'){photoBox.hidden=true;missionGalleryNote.hidden=false;photo.removeAttribute('src');return;}
+  if(!key||key==='giotto'||photo.dataset.retried==='1'){photoBox.hidden=true;missionGalleryNote.hidden=false;photo.removeAttribute('src');return;}
   photo.dataset.retried='1';
   try{const result=await findMissionPhoto(key);
    if(photo.dataset.mission!==key)return;
@@ -1524,7 +1524,7 @@ const mapOverlay=document.getElementById('carl-map-overlay'),mapDialog=document.
     }catch(e){thumbnail.remove();symbol.hidden=false;}
    };
    thumbnail.addEventListener('load',()=>{if(thumbnail.naturalWidth>0)symbol.hidden=true;});
-   thumbnail.addEventListener('error',()=>{if(media&&!thumbnail.dataset.fallback){thumbnail.dataset.fallback='1';useArchivePhoto();}else{thumbnail.remove();symbol.hidden=false;}});
+   thumbnail.addEventListener('error',()=>{if(media&&m.id!=='giotto'&&!thumbnail.dataset.fallback){thumbnail.dataset.fallback='1';useArchivePhoto();}else{thumbnail.remove();symbol.hidden=false;}});
    visual.append(thumbnail);
    if(media)thumbnail.src=media.url;
    else useArchivePhoto();
