@@ -647,13 +647,17 @@ footer .carl-app-actions #carl-install-hint{text-align:left;color:#b6c8d5}
 <button type="button" data-view="history" aria-selected="false">◷ História do céu</button>
 <button type="button" data-view="missions" aria-selected="false">🚀 Exploração espacial</button><button type="button" data-view="glossary" aria-selected="false">📖 Glossário</button>
 </nav><div class="carl-view-controls" aria-label="Navegação entre áreas"><button type="button" id="view-prev" aria-label="Área anterior">‹</button><div class="view-position" aria-live="polite" id="view-position">Astros<small>1 de 8</small></div><button type="button" id="view-next" aria-label="Próxima área">›</button></div><main><div class="carl-intro"><div class="eyebrow">CARL · OBSERVATÓRIO INTERATIVO</div><h1>O Universo em números.</h1><p>Explore o Cosmos.</p></div>
-<div class="cosmos-audio-bar"><button class="cosmos-sound" id="cosmos-sound" type="button" aria-pressed="false" aria-label="Ativar som ambiente do Cosmos">♫ Som</button><span class="cosmos-audio-note">Trilha e efeitos originais sintetizados · não são sons captados no espaço</span></div><div class="stage" id="stage"><div class="stars"></div><div class="compact-art white-dwarf" aria-hidden="true"><div class="dwarf-aura"></div><div class="dwarf-star"></div></div><div class="compact-art comet" aria-hidden="true"><div class="comet-tail"></div><div class="comet-tail dust"></div><div class="comet-coma"></div><div class="comet-core"></div></div><div class="pulsar-art" aria-hidden="true"><div class="pulsar-halo"></div><div class="pulsar-field"></div><div class="pulsar-field second"></div><div class="pulsar-beam up"></div><div class="pulsar-beam down"></div><div class="pulsar-core"></div></div><img id="hero" class="hero-image" src="assets/carl/terra.png" alt="Ilustração artística da Terra"><span class="stage-tip">Toque na imagem para ampliar · Deslize para mudar</span></div>
-<div id="image-credit" class="image-credit" aria-live="polite"></div><div class="filters" id="filters" aria-label="Categorias de objetos"></div>
-<div class="carousel"><button id="prev" class="arrow" aria-label="Anterior">‹</button><nav id="carousel" aria-label="Carrossel de corpos celestes"></nav><button id="next" class="arrow" aria-label="Próximo">›</button></div>
-<section class="info"><div class="eyebrow" id="kind"></div><h2 id="name">Terra</h2><p id="summary" class="summary"></p><details id="carl-earth-3d"><summary>Girar em 3D · Dia e noite</summary><div id="terra-carl-dia-noite">
+<div class="cosmos-audio-bar"><button class="cosmos-sound" id="cosmos-sound" type="button" aria-pressed="false" aria-label="Ativar som ambiente do Cosmos">♫ Som</button><span class="cosmos-audio-note">Trilha e efeitos originais sintetizados · não são sons captados no espaço</span></div><div class="stage" id="stage"><div class="stars"></div><div class="compact-art white-dwarf" aria-hidden="true"><div class="dwarf-aura"></div><div class="dwarf-star"></div></div><div class="compact-art comet" aria-hidden="true"><div class="comet-tail"></div><div class="comet-tail dust"></div><div class="comet-coma"></div><div class="comet-core"></div></div><div class="pulsar-art" aria-hidden="true"><div class="pulsar-halo"></div><div class="pulsar-field"></div><div class="pulsar-field second"></div><div class="pulsar-beam up"></div><div class="pulsar-beam down"></div><div class="pulsar-core"></div></div><img id="hero" class="hero-image" src="assets/carl/terra.png" alt="Ilustração artística da Terra"><span class="stage-tip">Toque na imagem para ampliar · Deslize para mudar</span><details id="carl-earth-3d" open><summary>Fechar 3D</summary><div id="terra-carl-dia-noite">
 <style>
-#carl-earth-3d{margin:12px 0}#carl-earth-3d>summary{width:fit-content;padding:10px 14px;border:1px solid #54769c;border-radius:10px;background:#172c47;color:#edf5ff;cursor:pointer}#carl-earth-3d[open]>summary{margin-bottom:10px}
-#terra-carl-dia-noite article{max-width:620px;margin:auto;padding:16px;color:#edf5ff;background:#0a1427;border-radius:18px;font-family:system-ui,sans-serif}
+#stage:has(#carl-earth-3d[open]:not([hidden])){height:auto;min-height:0;touch-action:auto}
+#stage:has(#carl-earth-3d[open]:not([hidden])) :is(#hero,.stage-tip){display:none}
+#carl-earth-3d{position:absolute;z-index:5;top:12px;right:12px}
+#carl-earth-3d[open]:not([hidden]){position:relative;inset:auto;width:100%}
+#carl-earth-3d>summary{position:relative;z-index:1;width:fit-content;margin:0 0 0 auto;padding:10px 14px;border:1px solid #54769c;border-radius:10px;background:#172c47;color:#edf5ff;cursor:pointer}
+#carl-earth-3d[open]>summary{position:absolute;top:8px;right:8px}
+#terra-carl-dia-noite .globe-title{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+#terra-carl-dia-noite [hidden]{display:none!important}
+#terra-carl-dia-noite article{max-width:620px;margin:auto;padding:42px 4px 8px;color:#edf5ff;background:transparent;font-family:system-ui,sans-serif}
 #terra-carl-dia-noite h2{margin:4px 0 0}
 #terra-carl-dia-noite canvas{display:block;width:min(100%,420px);margin:auto;touch-action:none;cursor:grab;background:radial-gradient(ellipse,#142847,transparent 70%)}
 #terra-carl-dia-noite nav{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
@@ -661,14 +665,17 @@ footer .carl-app-actions #carl-install-hint{text-align:left;color:#b6c8d5}
 #terra-carl-dia-noite p{margin:8px 0;color:#bacde5;text-align:center}
 #terra-carl-dia-noite button[aria-pressed=true]{background:#345478}
 </style>
-<article><h2>Terra em 3D</h2>
+<article><h2 class="globe-title">Terra em 3D</h2>
 <canvas width="420" height="360" role="img" aria-label="Globo terrestre interativo"></canvas>
 <p>Arraste para girar. Use a pinça ou a roda do mouse para ampliar.</p>
 <nav aria-label="Controles do globo">
 <button type="button" data-a="night" aria-pressed="false">Noite</button>
 <button type="button" data-a="left" aria-label="Girar à esquerda">←</button><button type="button" data-a="right" aria-label="Girar à direita">→</button><button type="button" data-a="up" aria-label="Inclinar para cima">↑</button><button type="button" data-a="down" aria-label="Inclinar para baixo">↓</button><button type="button" data-a="out" aria-label="Reduzir zoom">−</button><button type="button" data-a="in" aria-label="Aumentar zoom">+</button><button type="button" data-a="home">Brasil</button>
 </nav><p data-globe-credit hidden>Mapas adaptados de <a href="https://www.solarsystemscope.com/textures/">Solar System Scope</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></p><p role="status">Carregando o mapa da Terra…</p></article>
-</div></details>
+</div></details></div>
+<div id="image-credit" class="image-credit" aria-live="polite"></div><div class="filters" id="filters" aria-label="Categorias de objetos"></div>
+<div class="carousel"><button id="prev" class="arrow" aria-label="Anterior">‹</button><nav id="carousel" aria-label="Carrossel de corpos celestes"></nav><button id="next" class="arrow" aria-label="Próximo">›</button></div>
+<section class="info"><div class="eyebrow" id="kind"></div><h2 id="name">Terra</h2><p id="summary" class="summary"></p>
 <button id="open" class="primary" aria-expanded="false" aria-controls="details">Explorar números e descobertas <span aria-hidden="true">⌄</span></button>
 <div class="details" id="details" hidden><div class="tabs" id="tabs" aria-label="Informações do astro"><button data-pane="facts" aria-pressed="true">Dados</button><button data-pane="curiosities" aria-pressed="false">Descobertas</button><button data-pane="math" aria-pressed="false">Matemática</button><button data-pane="compare" aria-pressed="false">Comparar</button></div>
 <div id="facts" class="pane"></div><div id="curiosities" class="pane" hidden></div><div id="math" class="pane" hidden></div>
@@ -791,7 +798,7 @@ function changePane(id){currentPane=id;document.querySelectorAll('.tabs button')
 function step(delta){const list=currentList(),i=list.findIndex(b=>b.id===selected);select(list[(i+delta+list.length)%list.length].id)}
 $('prev').onclick=()=>step(-1);$('next').onclick=()=>step(1);
 $('hero').onclick=()=>$('hero').classList.toggle('zoom');
-$('stage').addEventListener('touchstart',e=>{touchX=e.changedTouches[0].clientX},{passive:true});$('stage').addEventListener('touchend',e=>{if(touchX===null)return;const dx=e.changedTouches[0].clientX-touchX;touchX=null;if(Math.abs(dx)>55)step(dx>0?-1:1)},{passive:true});
+$('stage').addEventListener('touchstart',e=>{touchX=e.target.closest('#carl-earth-3d')?null:e.changedTouches[0].clientX},{passive:true});$('stage').addEventListener('touchend',e=>{if(touchX===null)return;const dx=e.changedTouches[0].clientX-touchX;touchX=null;if(Math.abs(dx)>55)step(dx>0?-1:1)},{passive:true});
 $('open').onclick=()=>{const open=$('details').hidden;$('details').hidden=!open;$('open').setAttribute('aria-expanded',String(open));$('open').textContent=open?'Ocultar informações ⌃':'Explorar números e descobertas ⌄'};
 document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>changePane(b.dataset.pane));
 const measured=bodies.filter(b=>b.mass!==null&&b.radius!==null);
@@ -1660,16 +1667,20 @@ function loadTexture(){
  image.onerror=()=>{if(current===requestId){status.hidden=false;status.textContent='O mapa não carregou. Feche e reabra o globo para tentar novamente.';}};
  image.src=filename ? './assets/globes/'+filename+'.webp' : 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/textures/planets/earth_atmos_2048.jpg';
 }
-panel.addEventListener('toggle',loadTexture);
+function syncGlobe(){
+ panel.querySelector('summary').textContent=panel.open?'Fechar 3D':'Girar em 3D';
+ document.getElementById('image-credit').hidden=panel.open && !panel.hidden;
+ loadTexture();
+}
+panel.addEventListener('toggle',syncGlobe);
 panel.addEventListener('carl-globe-select',({detail})=>{
  if(bodyId===detail.id)return;
  bodyId=detail.id;
  filename=files[bodyId];
  const earth=bodyId==='terra';
  requestId++;
- panel.open=false;
  panel.hidden=!earth && !filename;
- panel.querySelector('summary').textContent=earth?'Girar em 3D · Dia e noite':'Girar em 3D';
+ panel.open=!panel.hidden;
  root.querySelector('h2').textContent=detail.n+' em 3D';
  canvas.setAttribute('aria-label','Globo interativo de '+detail.n);
  credit.hidden=!filename;
@@ -1681,7 +1692,9 @@ panel.addEventListener('carl-globe-select',({detail})=>{
  texture=null;
  ctx.clearRect(0,0,420,360);
  actions.home();
+ syncGlobe();
 });
+syncGlobe();
 })();
 </script>
 </body></html>
