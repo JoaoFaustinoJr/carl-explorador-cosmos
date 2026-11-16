@@ -655,6 +655,7 @@ footer .carl-app-actions #carl-install-hint{text-align:left;color:#b6c8d5}
 </nav><div class="carl-view-controls" aria-label="Navegação entre áreas"><button type="button" id="view-prev" aria-label="Área anterior">‹</button><div class="view-position" aria-live="polite" id="view-position">Astros<small>1 de 8</small></div><button type="button" id="view-next" aria-label="Próxima área">›</button></div><main><div class="carl-intro"><div class="eyebrow">CARL · OBSERVATÓRIO INTERATIVO</div><h1>O Universo em números.</h1><p>Explore o Cosmos.</p></div>
 <div class="cosmos-audio-bar"><button class="cosmos-sound" id="cosmos-sound" type="button" aria-pressed="false" aria-label="Ativar som ambiente do Cosmos">♫ Som</button><span class="cosmos-audio-note">Trilha e efeitos originais sintetizados · não são sons captados no espaço</span></div><div class="stage" id="stage"><div class="stars"></div><div class="compact-art white-dwarf" aria-hidden="true"><div class="dwarf-aura"></div><div class="dwarf-star"></div></div><div class="compact-art comet" aria-hidden="true"><div class="comet-tail"></div><div class="comet-tail dust"></div><div class="comet-coma"></div><div class="comet-core"></div></div><div class="pulsar-art" aria-hidden="true"><div class="pulsar-halo"></div><div class="pulsar-field"></div><div class="pulsar-field second"></div><div class="pulsar-beam up"></div><div class="pulsar-beam down"></div><div class="pulsar-core"></div></div><img id="hero" class="hero-image" src="assets/carl/terra.png" alt="Ilustração artística da Terra"><span class="stage-tip">Toque na imagem para ampliar · Deslize para mudar</span><details id="carl-earth-3d" open><summary>Fechar 3D</summary><div id="terra-carl-dia-noite">
 <style>
+#terra-carl-dia-noite [hidden]{display:none!important}
 #stage:has(#carl-earth-3d[open]:not([hidden])){height:auto;min-height:0;touch-action:auto}
 #stage:has(#carl-earth-3d[open]:not([hidden])) :is(#hero,.stage-tip){display:none}
 #carl-earth-3d{position:absolute;z-index:5;top:12px;right:12px}
@@ -680,7 +681,11 @@ footer .carl-app-actions #carl-install-hint{text-align:left;color:#b6c8d5}
 <nav aria-label="Controles do globo">
 <button type="button" data-a="night" aria-pressed="false">Noite</button>
 <button type="button" data-a="left" aria-label="Girar à esquerda">←</button><button type="button" data-a="right" aria-label="Girar à direita">→</button><button type="button" data-a="up" aria-label="Inclinar para cima">↑</button><button type="button" data-a="down" aria-label="Inclinar para baixo">↓</button><button type="button" data-a="out" aria-label="Reduzir zoom">−</button><button type="button" data-a="in" aria-label="Aumentar zoom">+</button><button type="button" data-a="home">Brasil</button>
-</nav><p data-globe-credit hidden>Mapas adaptados de <a href="https://www.solarsystemscope.com/textures/">Solar System Scope</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></p><p role="status">Carregando o mapa da Terra…</p></article>
+</nav><button type="button" data-a="satellite">Vista de satélite</button>
+<section id="carl-satellite" aria-label="Vista de satélite da Terra" hidden>
+<nav aria-label="Destinos na Terra"><button type="button" data-place="Brasil">Brasil</button><button type="button" data-place="Paraná">Paraná</button><button type="button" data-place="Jaboti">Jaboti</button><button type="button" data-place="Ibaiti">Ibaiti</button><button type="button" data-place="Curitiba">Curitiba</button><button type="button" data-return>Voltar ao globo</button></nav>
+<p data-map-status role="status"></p><div id="carl-satellite-map" style="height:clamp(270px,55vh,520px);width:100%;background:#071524;isolation:isolate"></div>
+</section><p data-globe-credit hidden>Mapas adaptados de <a href="https://www.solarsystemscope.com/textures/">Solar System Scope</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></p><p role="status">Carregando o mapa da Terra…</p></article>
 </div></details></div>
 <div id="image-credit" class="image-credit" aria-live="polite"></div><div class="filters" id="filters" aria-label="Categorias de objetos"></div>
 <div class="carousel"><button id="prev" class="arrow" aria-label="Anterior">‹</button><nav id="carousel" aria-label="Carrossel de corpos celestes"></nav><button id="next" class="arrow" aria-label="Próximo">›</button></div>
@@ -1828,7 +1833,63 @@ function render(){
  }
  ctx.putImageData(frame,0,0);
 }
+const satellite=root.querySelector('#carl-satellite');
+const satelliteButton=root.querySelector('[data-a="satellite"]');
+const globeControls=satelliteButton && satelliteButton.previousElementSibling;
+const globeHint=globeControls && globeControls.previousElementSibling;
+let satelliteMap, satelliteLibrary;
+function showSatellite(visible){
+ if(!satellite)return;
+ satellite.hidden=!visible;
+ for(const item of [canvas,globeHint,globeControls,satelliteButton])item.hidden=visible;
+ if(!visible)satelliteButton.hidden=bodyId!=='terra';
+}
+async function openSatellite(){
+ if(!satellite || !satellite.hidden || bodyId!=='terra')return;
+ const center=[Math.max(-85,Math.min(85,lat*180/Math.PI)),lon*180/Math.PI];
+ const message=satellite.querySelector('[data-map-status]');
+ showSatellite(true);
+ satellite.querySelector('[data-return]').focus();
+ message.textContent='Carregando imagens de satélite…';
+ try{
+  if(!window.L){
+   satelliteLibrary ??= new Promise((resolve,reject)=>{
+    const css=document.createElement('link');
+    css.rel='stylesheet';css.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+    document.head.append(css);
+    const script=document.createElement('script');
+    script.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+    script.onload=resolve;
+    script.onerror=()=>{script.remove();css.remove();reject(new Error('Leaflet'));};
+    document.head.append(script);
+   }).catch(error=>{satelliteLibrary=null;throw error;});
+   await satelliteLibrary;
+  }
+  if(satellite.hidden)return;
+  if(!satelliteMap){
+   satelliteMap=L.map('carl-satellite-map',{maxZoom:19});
+   satelliteMap.attributionControl.setPrefix(false);
+   L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{
+    maxZoom:19, attribution:'Imagery © Esri, Maxar, Earthstar Geographics e comunidade GIS'
+   }).on('tileload',()=>{message.textContent='';})
+     .on('tileerror',()=>{message.textContent='Algumas imagens estão indisponíveis. Tente reduzir o zoom.';}).addTo(satelliteMap);
+  }
+  satelliteMap.invalidateSize();
+  satelliteMap.setView(center,5);
+ }catch{
+  message.textContent='A vista de satélite precisa de internet. Volte ao globo para tentar novamente.';
+ }
+}
+if(satellite){
+ const destinations={Brasil:[-14,-53,4],Paraná:[-24.7,-51.5,7],Jaboti:[-23.74,-50.07,16],Ibaiti:[-23.85,-50.19,16],Curitiba:[-25.43,-49.27,15]};
+ satellite.querySelectorAll('[data-place]').forEach(button=>button.onclick=()=>{
+  const [latitude,longitude,level]=destinations[button.dataset.place];
+  satelliteMap?.setView([latitude,longitude],level);
+ });
+ satellite.querySelector('[data-return]').onclick=()=>{showSatellite(false);satelliteButton.focus();};
+}
 function update(dx=0,dy=0,scale=1){
+ if(satellite && bodyId==='terra' && zoom>=2.59 && scale>1){openSatellite();return;}
  lon=(lon+dx)%(2*Math.PI);
  lat=Math.max(-Math.PI/2,Math.min(Math.PI/2,lat+dy));
  zoom=Math.max(.7,Math.min(2.6,zoom*scale));
@@ -1846,13 +1907,13 @@ nightImage.onload=()=>{
  if(night){status.hidden=true;update();}
 };
 nightImage.onerror=()=>{if(night){night=false;nightButton.setAttribute("aria-pressed","false");nightButton.textContent="Noite";status.hidden=false;status.textContent="A imagem noturna não carregou.";}};
-const actions={night:()=>{
+const actions={satellite:openSatellite,night:()=>{
  night=!night;nightButton.setAttribute("aria-pressed",String(night));nightButton.textContent=night?"Dia":"Noite";
  status.hidden=!night || Boolean(nightTexture);
  if(night && !nightTexture){status.textContent="Carregando a vista noturna…";nightImage.src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/textures/planets/earth_lights_2048.png";}
  update();
-},left:()=>update(-.34),right:()=>update(.34),up:()=>update(0,.27),down:()=>update(0,-.27),out:()=>update(0,0,1/1.2),in:()=>update(0,0,1.2),home:()=>{lon=bodyId==="terra"?.65:0;lat=bodyId==="terra"?-.25:0;zoom=1;update();}};
-root.querySelectorAll('button').forEach(button=>button.onclick=actions[button.dataset.a]);
+},left:()=>update(-.34),right:()=>update(.34),up:()=>update(0,.27),down:()=>update(0,-.27),out:()=>update(0,0,1/1.2),in:()=>update(0,0,1.2),home:()=>{lon=bodyId==="terra"?-.92:0;lat=bodyId==="terra"?-.25:0;zoom=1;update();}};
+root.querySelectorAll('button[data-a]').forEach(button=>button.onclick=actions[button.dataset.a]);
 canvas.onpointerdown=e=>{canvas.setPointerCapture(e.pointerId);points.set(e.pointerId,[e.clientX,e.clientY]);};
 canvas.onpointermove=e=>{
  const previous=points.get(e.pointerId);
@@ -1904,6 +1965,7 @@ panel.addEventListener('carl-globe-select',({detail})=>{
  bodyId=detail.id;
  filename=files[bodyId];
  const earth=bodyId==='terra';
+ showSatellite(false);
  requestId++;
  const model=primary && models[bodyId];
  panel.hidden=!earth && !filename;
