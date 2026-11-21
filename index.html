@@ -1268,6 +1268,23 @@ if(galleryData){
  }
  card.querySelector('.fleet-facts').append(gallery);
 }
+if(m[0]==='Voyager 1 e 2'){
+ card.querySelector('.fleet-status').textContent='Voyager 1 · um dia-luz da Terra em 18/11/2026';
+ const note=document.createElement('aside');
+ note.className='voyager-lightday-note';
+ const title=document.createElement('h6');
+ title.textContent='Um dia inteiro para a luz chegar';
+ const description=document.createElement('p');
+ description.textContent='Em 18 de novembro de 2026, a Voyager 1 tornou-se o primeiro objeto construído pela humanidade a alcançar um dia-luz da Terra, aproximadamente 25,9 bilhões de quilômetros. Lançada em 1977, levou mais de 49 anos para chegar a essa distância.';
+ const explanation=document.createElement('p');
+ explanation.textContent='Nesse marco, um sinal de rádio leva cerca de 24 horas em cada sentido. Um comando e sua confirmação exigem aproximadamente 48 horas de viagem dos sinais, além do tempo necessário para executar a operação. Um dia-luz é uma unidade de distância.';
+ const reference=document.createElement('a');
+ reference.href='https://www.nasa.gov/news-release/nasas-voyager-1-makes-history-reaching-one-light-day-from-earth/';
+ reference.target='_blank';reference.rel='noopener noreferrer';
+ reference.textContent='NASA · Confirmação do marco ↗';
+ note.append(title,description,explanation,reference);
+ card.querySelector('.fleet-facts').append(note);
+}
 grid.append(card)});
 const cards=[...grid.querySelectorAll('.fleet-card')],count=document.getElementById('fleet-count');
 function currentIndex(){const x=grid.scrollLeft;let best=0,d=Infinity;cards.forEach((c,i)=>{const v=Math.abs(c.offsetLeft-cards[0].offsetLeft-x);if(v<d){d=v;best=i}});return best}
