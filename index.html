@@ -1235,18 +1235,7 @@ const moonPhotos={'Lua':['https://commons.wikimedia.org/wiki/Special:FilePath/Fu
  const coord=(Math.abs(lat).toFixed(3)+'° '+(lat<0?'S':'N')+' · '+Math.abs(lon).toFixed(3)+'° '+(lon<0?'O':'L'));
  const esc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const title=document.getElementById('sky-print-title').value.trim()||'O céu de uma noite especial';
- win.document.write('<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>'+esc(title+' · '+formattedDate)+'</title><style>*{box-sizing:border-box}body{font-family:Georgia,serif;text-align:center;background:#061426;color:#f2e2be;padding:25px;margin:0}.sheet{max-width:780px;margin:auto;border:1px solid #b99b65;border-radius:20px;padding:24px;background:radial-gradient(circle at 50% 40%,#15324b,#061426 75%)}.eyebrow{letter-spacing:.24em;color:#c7aa78;font:12px Arial,sans-serif}h1{font-size:30px;margin:10px 0 5px;overflow-wrap:anywhere}.place{font-size:19px;margin:12px 0 5px}.details{font:14px Arial,sans-serif;color:#c9d7e5;line-height:1.8}.details b{color:#f2e2be}svg{width:min(100%,620px);height:auto;display:block;margin:10px auto}.foot{font:12px Arial,sans-serif;color:#c3b99d;line-height:1.7}@page{size:A4 portrait;margin:12mm}@media print{body{padding:0;background:#061426!important;print-color-adjust:exact;-webkit-print-color-adjust:exact}.sheet{border-radius:0;min-height:265mm;padding:16px}svg{max-height:175mm}}</style></head><body><article class="sheet"><div class="eyebrow">TANGRAM EDUCATIVO · OBSERVATÓRIO CARL</div><h1>'+esc(title)+'</h1><div class="place">'+esc(city)+'</div><div class="details"><b>Data:</b> '+esc(formattedDate)+' &nbsp; <b>Horário local:</b> '+esc(time)+'<div><b>Coordenadas:</b> '+esc(coord)+'</div></div>'+exportSvg()+'<div class="foot">Norte acima · Leste à esquerda · Zênite ao centro<br>Carta didática com estrelas de referência e constelações simplificadas.<br>Com carinho: JFJr</div></article><script>(()=>{
-const button=document.getElementById('share-voyager-note');
-button.addEventListener('click',async()=>{
- const url=new URL(location.href);url.hash='voyager-um-dia-luz';
- const data={title:'Voyager 1 a um dia-luz da Terra · CARL',text:'Uma mensagem leva um dia inteiro para chegar à Voyager 1. Descubra essa história no CARL.',url:url.href};
- const status=document.getElementById('share-voyager-status');
- try{
-  if(navigator.share)await navigator.share(data);
-  else{await navigator.clipboard.writeText(data.text+' '+data.url);status.textContent=' Link copiado.';}
- }catch(error){if(error.name!=='AbortError')status.textContent=' Copie o link: '+url.href;}
-});
-})();</script></body></html>');
+ win.document.write('<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>'+esc(title+' · '+formattedDate)+'</title><style>*{box-sizing:border-box}body{font-family:Georgia,serif;text-align:center;background:#061426;color:#f2e2be;padding:25px;margin:0}.sheet{max-width:780px;margin:auto;border:1px solid #b99b65;border-radius:20px;padding:24px;background:radial-gradient(circle at 50% 40%,#15324b,#061426 75%)}.eyebrow{letter-spacing:.24em;color:#c7aa78;font:12px Arial,sans-serif}h1{font-size:30px;margin:10px 0 5px;overflow-wrap:anywhere}.place{font-size:19px;margin:12px 0 5px}.details{font:14px Arial,sans-serif;color:#c9d7e5;line-height:1.8}.details b{color:#f2e2be}svg{width:min(100%,620px);height:auto;display:block;margin:10px auto}.foot{font:12px Arial,sans-serif;color:#c3b99d;line-height:1.7}@page{size:A4 portrait;margin:12mm}@media print{body{padding:0;background:#061426!important;print-color-adjust:exact;-webkit-print-color-adjust:exact}.sheet{border-radius:0;min-height:265mm;padding:16px}svg{max-height:175mm}}</style></head><body><article class="sheet"><div class="eyebrow">TANGRAM EDUCATIVO · OBSERVATÓRIO CARL</div><h1>'+esc(title)+'</h1><div class="place">'+esc(city)+'</div><div class="details"><b>Data:</b> '+esc(formattedDate)+' &nbsp; <b>Horário local:</b> '+esc(time)+'<div><b>Coordenadas:</b> '+esc(coord)+'</div></div>'+exportSvg()+'<div class="foot">Norte acima · Leste à esquerda · Zênite ao centro<br>Carta didática com estrelas de referência e constelações simplificadas.<br>Com carinho: JFJr</div></article></body></html>');
  win.document.close();win.focus();setTimeout(()=>win.print(),450);
 });
 })();
@@ -2048,4 +2037,34 @@ setupGlobe(document.getElementById('carl-earth-3d'),document.getElementById('ter
 setupGlobe(document.getElementById('solar-globe'),document.querySelector('#solar-globe .carl-globe-controls'),false);
 })();
 </script>
-</body></html>
+<script>(()=>{
+ const button=document.getElementById('share-voyager-note');
+ const status=document.getElementById('share-voyager-status');
+ if(!button||!status)return;
+ const url='https://joaofaustinojr.github.io/carl-explorador-cosmos/#voyager-um-dia-luz';
+ const text='O mais longe que já chegamos. Uma mensagem leva um dia inteiro para chegar à Voyager 1. Conheça essa história no CARL.';
+ const fallback=document.createElement('div');
+ fallback.hidden=true;
+ const input=document.createElement('input');
+ input.type='text';input.readOnly=true;input.value=url;input.setAttribute('aria-label','Link da descoberta');input.style.cssText='width:100%;box-sizing:border-box;margin:10px 0;padding:12px;color:#edf5ff;background:#10283f;border:1px solid #7295b0;border-radius:8px';
+ const copy=document.createElement('button');copy.type='button';copy.textContent='Copiar link';
+ fallback.append(input,copy);status.after(fallback);
+ async function copyLink(){
+  try{
+   await navigator.clipboard.writeText(url);
+   status.textContent=' Link copiado. Cole na conversa para compartilhar.';
+  }catch{
+   fallback.hidden=false;input.focus();input.select();input.setSelectionRange(0,url.length);
+   status.textContent=' Selecione e copie o link abaixo.';
+  }
+ }
+ copy.addEventListener('click',copyLink);
+ button.addEventListener('click',async()=>{
+  if(navigator.share){
+   try{await navigator.share({title:'O mais longe que já chegamos · CARL',text,url});status.textContent='';return;}
+   catch(error){if(error.name==='AbortError')return;}
+  }
+  fallback.hidden=false;
+  await copyLink();
+ });
+})();</script></body></html>
